@@ -17,4 +17,11 @@ describe('내 정보 선택창 호환성', () => {
     expect(markup).toContain('role="combobox"');
     expect(markup).toContain('aria-label="지역"');
   });
+
+  it('어르신이 따라 하기 쉬운 큰 설치 안내를 제공한다', () => {
+    const markup = renderToStaticMarkup(<Home />);
+    expect(markup).toContain('휴대폰에 앱 설치하기');
+    expect(markup).toContain('홈 화면에 추가');
+    expect(markup).toContain('나중에 하기');
+  });
 });

@@ -22,6 +22,7 @@ import {
   RotateCcw,
   Save,
   Search,
+  Share2,
   ShieldCheck,
   Smartphone,
   Sparkles,
@@ -115,6 +116,7 @@ declare global {
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 const dataUrl = `${basePath}/data/events.json`;
 const STORAGE_KEY = 'park-golf-finder:v1';
+const INSTALL_GUIDE_SESSION_KEY = 'park-golf-finder:install-guide-shown';
 
 const emptyFilters: EventFilters = {
   query: '',
@@ -297,6 +299,7 @@ export default function Home() {
   }, [favorites, applied, profile, storageReady]);
 
   useEffect(() => {
+    let installGuideTimer: number | undefined;
     if ('serviceWorker' in navigator) {
       void navigator.serviceWorker.register(`${basePath}/sw.js`, { scope: `${basePath}/` })
         .then((registration) => registration.update())
@@ -306,8 +309,19 @@ export default function Home() {
     const readDeviceState = () => {
       const standalone = window.matchMedia('(display-mode: standalone)').matches
         || Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
+      const ios = /iphone|ipad|ipod/i.test(navigator.userAgent)
+        || (/macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+      const mobile = ios || /android/i.test(navigator.userAgent);
       setIsInstalled(standalone);
-      setIsIos(/iphone|ipad|ipod/i.test(navigator.userAgent));
+      setIsIos(ios);
+      if (standalone || !mobile) return;
+      try {
+        if (sessionStorage.getItem(INSTALL_GUIDE_SESSION_KEY)) return;
+        sessionStorage.setItem(INSTALL_GUIDE_SESSION_KEY, '1');
+      } catch {
+        // 저장 기능이 막힌 브라우저에서도 설치 안내는 한 번 표시합니다.
+      }
+      installGuideTimer = window.setTimeout(() => setInstallHelpOpen(true), 900);
     };
     if (document.readyState === 'complete') queueMicrotask(readDeviceState);
     else window.addEventListener('load', readDeviceState, { once: true });
@@ -324,6 +338,7 @@ export default function Home() {
     window.addEventListener('beforeinstallprompt', handleInstallPrompt);
     window.addEventListener('appinstalled', handleInstalled);
     return () => {
+      if (installGuideTimer) window.clearTimeout(installGuideTimer);
       window.removeEventListener('load', readDeviceState);
       window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
       window.removeEventListener('appinstalled', handleInstalled);
@@ -460,6 +475,7 @@ export default function Home() {
       setInstallHelpOpen(true);
       return;
     }
+    setInstallHelpOpen(false);
     await installPrompt.prompt();
     const choice = await installPrompt.userChoice;
     if (choice.outcome === 'accepted') setIsInstalled(true);
@@ -595,21 +611,29 @@ export default function Home() {
             <h2 id="install-dialog-title" className="text-2xl font-black text-slate-950">휴대폰에 앱 설치하기</h2>
             <p id="install-dialog-description" className="text-base leading-7 text-slate-600">설치비 없이 홈 화면에서 앱처럼 바로 열 수 있어요.</p>
           </div>
-          {isIos ? (
-            <ol className="grid gap-3 rounded-2xl bg-emerald-50 p-4 text-base leading-7 text-slate-800">
-              <li><strong>1.</strong> Safari 아래쪽의 <strong>공유 버튼</strong>을 누르세요.</li>
-              <li><strong>2.</strong> 메뉴에서 <strong>홈 화면에 추가</strong>를 누르세요.</li>
-              <li><strong>3.</strong> 오른쪽 위의 <strong>추가</strong>를 누르세요.</li>
+          {installPrompt ? (
+            <div className="grid gap-3 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-4 text-center">
+              <p className="text-lg font-black leading-8 text-emerald-950">아래 버튼을 누르고<br />다음 화면에서 ‘설치’만 누르세요.</p>
+              <Button type="button" size="lg" className="h-16 w-full text-xl font-black" onClick={() => void startInstall()}>
+                <Download className="size-6" aria-hidden="true" /> 지금 설치하기
+              </Button>
+            </div>
+          ) : isIos ? (
+            <ol className="install-steps">
+              <li><span>1</span><div><strong><Share2 className="inline size-6" aria-hidden="true" /> 공유</strong> 버튼을 누르세요.</div></li>
+              <li><span>2</span><div><strong>홈 화면에 추가</strong>를 누르세요.</div></li>
+              <li><span>3</span><div>오른쪽 위의 <strong>추가</strong>를 누르세요.</div></li>
             </ol>
           ) : (
-            <ol className="grid gap-3 rounded-2xl bg-emerald-50 p-4 text-base leading-7 text-slate-800">
-              <li><strong>1.</strong> 브라우저 오른쪽 위의 <strong>점 3개 메뉴</strong>를 누르세요.</li>
-              <li><strong>2.</strong> <strong>앱 설치</strong> 또는 <strong>홈 화면에 추가</strong>를 누르세요.</li>
-              <li><strong>3.</strong> <strong>설치</strong>를 누르세요.</li>
+            <ol className="install-steps">
+              <li><span>1</span><div>브라우저 오른쪽 위의 <strong>점 3개</strong>를 누르세요.</div></li>
+              <li><span>2</span><div><strong>앱 설치</strong> 또는 <strong>홈 화면에 추가</strong>를 누르세요.</div></li>
+              <li><span>3</span><div><strong>설치</strong>를 누르세요.</div></li>
             </ol>
           )}
+          {!installPrompt && !isIos && <p className="rounded-xl bg-amber-50 p-3 font-bold leading-7 text-amber-950">카카오톡 안에서 열었다면 먼저 점 3개 메뉴에서 ‘다른 브라우저로 열기’를 눌러주세요.</p>}
           <div className="-mx-5 -mb-5 rounded-b-3xl border-t bg-slate-50 p-4 sm:-mx-6 sm:-mb-6">
-            <Button type="button" size="lg" className="h-12 w-full text-base font-black" onClick={() => setInstallHelpOpen(false)}>확인</Button>
+            <Button type="button" variant="outline" size="lg" className="h-14 w-full text-lg font-black" onClick={() => setInstallHelpOpen(false)}>나중에 하기</Button>
           </div>
         </div>
       </NativeDialog>
