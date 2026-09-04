@@ -75,12 +75,8 @@ export type EventFilters = {
   nearbyOnly: boolean;
 };
 
-export const PRIORITY_REGIONS = new Set(['경북', '경남', '대구', '울산']);
-const ADJACENT_CITIES = ['경주', '포항', '영천', '경산', '청도', '울산', '대구'];
-
-export function isNearby(event: EventItem) {
-  if (PRIORITY_REGIONS.has(event.region)) return true;
-  return ADJACENT_CITIES.some((city) => `${event.city ?? ''} ${event.venue}`.includes(city));
+export function isHomeRegion(event: EventItem, homeRegion: string) {
+  return Boolean(homeRegion && event.region === homeRegion);
 }
 
 export function computeStatus(event: Pick<EventItem, 'event_end' | 'registration_start' | 'registration_end'>, now = new Date()): RegistrationStatus {
@@ -95,7 +91,7 @@ export function computeStatus(event: Pick<EventItem, 'event_end' | 'registration
   return '접수 중';
 }
 
-export function filterEvents(events: EventItem[], filters: EventFilters, now = new Date()) {
+export function filterEvents(events: EventItem[], filters: EventFilters, now = new Date(), homeRegion = '') {
   const query = filters.query.trim().toLocaleLowerCase('ko');
   return events.filter((event) => {
     const status = computeStatus(event, now);
@@ -105,16 +101,16 @@ export function filterEvents(events: EventItem[], filters: EventFilters, now = n
     if (filters.status && status !== filters.status) return false;
     if (filters.eligibility && !event.eligibility.includes(filters.eligibility)) return false;
     if (filters.competitionType && !event.competition_type.includes(filters.competitionType)) return false;
-    if (filters.nearbyOnly && !isNearby(event)) return false;
+    if (filters.nearbyOnly && !isHomeRegion(event, homeRegion)) return false;
     if (filters.dateStart && event.event_end < filters.dateStart) return false;
     if (filters.dateEnd && event.event_start > filters.dateEnd) return false;
     return true;
   });
 }
 
-export function sortEvents(events: EventItem[], sort: 'event' | 'registration') {
+export function sortEvents(events: EventItem[], sort: 'event' | 'registration', homeRegion = '') {
   return [...events].sort((a, b) => {
-    const priority = Number(!isNearby(a)) - Number(!isNearby(b));
+    const priority = Number(!isHomeRegion(a, homeRegion)) - Number(!isHomeRegion(b, homeRegion));
     if (priority) return priority;
     if (sort === 'registration') {
       const aEnd = a.registration_end ?? '9999-12-31';

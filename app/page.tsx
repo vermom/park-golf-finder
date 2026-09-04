@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   ChevronRight,
   Clock3,
+  Download,
   ExternalLink,
   FileText,
   Heart,
@@ -19,9 +20,14 @@ import {
   Navigation,
   Phone,
   RotateCcw,
+  Save,
   Search,
+  ShieldCheck,
+  Smartphone,
   Sparkles,
+  Trash2,
   Trophy,
+  UserRound,
   Users,
 } from 'lucide-react';
 
@@ -29,6 +35,14 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -39,7 +53,7 @@ import {
   computeStatus,
   conflictsFor,
   filterEvents,
-  isNearby,
+  isHomeRegion,
   sortEvents,
   type EventFilters,
   type EventItem,
@@ -47,6 +61,15 @@ import {
   type TrustStatus,
 } from '@/lib/events';
 import { brouterUrl, formatDrivingRoute, parseBrouterRoute, type DrivingRoute } from '@/lib/distance';
+import {
+  EMPTY_PROFILE,
+  PROFILE_REGIONS,
+  hasProfile,
+  normalizeProfile,
+  profileSummary,
+  type LocalProfile,
+  type MembershipStatus,
+} from '@/lib/profile';
 
 type SourceStatus = {
   id: string;
@@ -67,13 +90,17 @@ type EventFile = {
   events: EventItem[];
 };
 
-type SavedState = { favorites: string[]; applied: string[] };
+type SavedState = { favorites: string[]; applied: string[]; profile: LocalProfile };
 type ViewMode = 'all' | 'favorites' | 'applied';
 type UserLocation = { latitude: number; longitude: number };
 type RouteState =
   | { status: 'loading' }
   | { status: 'ready'; route: DrivingRoute }
   | { status: 'error'; message: string };
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+};
 
 declare global {
   interface Document {
@@ -93,7 +120,8 @@ declare global {
   }
 }
 
-const dataUrl = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/data/events.json`;
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+const dataUrl = `${basePath}/data/events.json`;
 const STORAGE_KEY = 'park-golf-finder:v1';
 
 const emptyFilters: EventFilters = {
@@ -104,7 +132,7 @@ const emptyFilters: EventFilters = {
   status: '',
   eligibility: '',
   competitionType: '',
-  nearbyOnly: true,
+  nearbyOnly: false,
 };
 
 const statusStyle: Record<RegistrationStatus, string> = {
@@ -198,11 +226,19 @@ export default function Home() {
   const [viewMode, setViewMode] = useState<ViewMode>('all');
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [applied, setApplied] = useState<Set<string>>(new Set());
+  const [profile, setProfile] = useState<LocalProfile>(EMPTY_PROFILE);
+  const [profileDraft, setProfileDraft] = useState<LocalProfile>(EMPTY_PROFILE);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [profileError, setProfileError] = useState('');
   const [storageReady, setStorageReady] = useState(false);
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [locationStatus, setLocationStatus] = useState<'idle' | 'requesting' | 'ready' | 'error'>('idle');
   const [locationMessage, setLocationMessage] = useState('');
   const [routes, setRoutes] = useState<Record<string, RouteState>>({});
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installHelpOpen, setInstallHelpOpen] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [isIos, setIsIos] = useState(false);
   const requestedRouteKeys = useRef(new Set<string>());
 
   /* oxlint-disable react/react-compiler -- 브라우저 저장값과 외부 JSON을 최초 1회 동기화합니다. */
@@ -219,6 +255,7 @@ export default function Home() {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') as Partial<SavedState>;
       setFavorites(new Set(saved.favorites ?? []));
       setApplied(new Set(saved.applied ?? []));
+      setProfile(normalizeProfile(saved.profile));
     } catch {
       localStorage.removeItem(STORAGE_KEY);
     } finally {
@@ -229,8 +266,42 @@ export default function Home() {
 
   useEffect(() => {
     if (!storageReady) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ favorites: [...favorites], applied: [...applied] }));
-  }, [favorites, applied, storageReady]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ favorites: [...favorites], applied: [...applied], profile }));
+  }, [favorites, applied, profile, storageReady]);
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      void navigator.serviceWorker.register(`${basePath}/sw.js`, { scope: `${basePath}/` })
+        .then((registration) => registration.update())
+        .catch(() => undefined);
+    }
+
+    const readDeviceState = () => {
+      const standalone = window.matchMedia('(display-mode: standalone)').matches
+        || Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
+      setIsInstalled(standalone);
+      setIsIos(/iphone|ipad|ipod/i.test(navigator.userAgent));
+    };
+    if (document.readyState === 'complete') queueMicrotask(readDeviceState);
+    else window.addEventListener('load', readDeviceState, { once: true });
+
+    const handleInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+    const handleInstalled = () => {
+      setIsInstalled(true);
+      setInstallPrompt(null);
+      setInstallHelpOpen(false);
+    };
+    window.addEventListener('beforeinstallprompt', handleInstallPrompt);
+    window.addEventListener('appinstalled', handleInstalled);
+    return () => {
+      window.removeEventListener('load', readDeviceState);
+      window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
+      window.removeEventListener('appinstalled', handleInstalled);
+    };
+  }, []);
 
   useEffect(() => {
     const context = document.modelContext;
@@ -277,13 +348,13 @@ export default function Home() {
   const regions = useMemo(() => [...new Set(allEvents.map((event) => event.region).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ko')), [allEvents]);
   const conflicts = useMemo(() => conflictsFor(allEvents, applied), [allEvents, applied]);
   const shownEvents = useMemo(() => {
-    const filtered = filterEvents(allEvents, filters).filter((event) => {
+    const filtered = filterEvents(allEvents, filters, new Date(), profile.region).filter((event) => {
       if (viewMode === 'favorites') return favorites.has(event.id);
       if (viewMode === 'applied') return applied.has(event.id);
       return true;
     });
-    return sortEvents(filtered, sort);
-  }, [allEvents, filters, sort, viewMode, favorites, applied]);
+    return sortEvents(filtered, sort, profile.region);
+  }, [allEvents, filters, sort, viewMode, favorites, applied, profile.region]);
 
   const openCount = allEvents.filter((event) => ['접수 중', '마감 임박'].includes(computeStatus(event))).length;
   const failedSources = data?.meta.source_statuses.filter((source) => source.status === 'failed').length ?? 0;
@@ -331,6 +402,43 @@ export default function Home() {
     });
   };
 
+  const openProfileEditor = () => {
+    setProfileDraft({ ...profile });
+    setProfileError('');
+    setProfileOpen(true);
+  };
+
+  const saveProfile = () => {
+    const next = normalizeProfile(profileDraft);
+    if (!next.region) {
+      setProfileError('주로 활동하는 시·도를 선택해 주세요.');
+      return;
+    }
+    setProfile(next);
+    setProfileError('');
+    setProfileOpen(false);
+  };
+
+  const deleteProfile = () => {
+    if (!window.confirm('이 기기에 저장된 내 정보만 삭제할까요? 관심 대회와 신청 완료 표시는 그대로 남습니다.')) return;
+    setProfile(EMPTY_PROFILE);
+    setProfileDraft(EMPTY_PROFILE);
+    setFilters((current) => ({ ...current, nearbyOnly: false }));
+    setProfileOpen(false);
+  };
+
+  const startInstall = async () => {
+    if (isInstalled) return;
+    if (!installPrompt) {
+      setInstallHelpOpen(true);
+      return;
+    }
+    await installPrompt.prompt();
+    const choice = await installPrompt.userChoice;
+    if (choice.outcome === 'accepted') setIsInstalled(true);
+    setInstallPrompt(null);
+  };
+
   const requestLocation = () => {
     if (!navigator.geolocation) {
       setLocationStatus('error');
@@ -358,15 +466,116 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="scoreboard-band">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-6 sm:py-5">
-          <div>
-            <p className="eyebrow">경주에서 출발하는 전국 대회 찾기</p>
-            <h1 className="text-2xl font-black tracking-[-0.035em] sm:text-4xl">파크골프 대회 찾기</h1>
-            <p className="mt-1 text-sm font-semibold text-emerald-50 sm:text-base">동경주클럽 · 대한파크골프협회 회원 기준</p>
+    <>
+      <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
+        <DialogContent showCloseButton={false} className="max-h-[calc(100dvh-2rem)] max-w-lg overflow-y-auto rounded-3xl p-5 text-base sm:p-6">
+          <DialogHeader>
+            <DialogTitle className="pr-8 text-2xl font-black text-slate-950">내 정보 등록</DialogTitle>
+            <DialogDescription className="text-base leading-7 text-slate-600">
+              참가 조건을 확인할 때 참고할 정보입니다. 이 기기의 브라우저에만 저장되고 접수처로 자동 전송되지 않습니다.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 py-1">
+            <div className="grid gap-1.5">
+              <span className="text-base font-black text-slate-800">주로 활동하는 시·도 <span className="text-rose-700">필수</span></span>
+              <Select value={profileDraft.region || 'none'} onValueChange={(value) => setProfileDraft({ ...profileDraft, region: value === 'none' || value === null ? '' : String(value) })}>
+                <SelectTrigger aria-label="주로 활동하는 시도" className="h-13 w-full rounded-xl border-slate-300 bg-white px-3 text-base">
+                  <SelectValue>{profileDraft.region || '시·도를 선택하세요'}</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">시·도를 선택하세요</SelectItem>
+                  {PROFILE_REGIONS.map((region) => <SelectItem key={region} value={region}>{region}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <label htmlFor="profile-city" className="grid gap-1.5 text-base font-black text-slate-800">
+              거주 시·군·구 <span className="font-normal text-slate-500">선택</span>
+              <Input id="profile-city" maxLength={40} className="h-13 rounded-xl bg-white text-base md:text-base" value={profileDraft.city} onChange={(event) => setProfileDraft({ ...profileDraft, city: event.target.value })} placeholder="예: 경주시" />
+            </label>
+
+            <label htmlFor="profile-club" className="grid gap-1.5 text-base font-black text-slate-800">
+              소속 클럽 <span className="font-normal text-slate-500">선택</span>
+              <Input id="profile-club" maxLength={40} className="h-13 rounded-xl bg-white text-base md:text-base" value={profileDraft.club} onChange={(event) => setProfileDraft({ ...profileDraft, club: event.target.value })} placeholder="예: 한마음클럽" />
+            </label>
+
+            <div className="grid gap-1.5">
+              <span className="text-base font-black text-slate-800">대한파크골프협회 회원 여부 <span className="font-normal text-slate-500">선택</span></span>
+              <Select value={profileDraft.membership || 'unset'} onValueChange={(value) => setProfileDraft({ ...profileDraft, membership: value === 'unset' || value === null ? '' : value as MembershipStatus })}>
+                <SelectTrigger aria-label="대한파크골프협회 회원 여부" className="h-13 w-full rounded-xl border-slate-300 bg-white px-3 text-base">
+                  <SelectValue>{profileDraft.membership === 'member' ? '회원' : profileDraft.membership === 'not-member' ? '비회원' : profileDraft.membership === 'unknown' ? '잘 모르겠어요' : '선택하지 않음'}</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="unset">선택하지 않음</SelectItem>
+                  <SelectItem value="member">회원</SelectItem>
+                  <SelectItem value="not-member">비회원</SelectItem>
+                  <SelectItem value="unknown">잘 모르겠어요</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-base leading-7 text-sky-950">
+              <ShieldCheck className="mt-1 size-6 shrink-0" aria-hidden="true" />
+              <p><strong>이름·전화번호·상세주소는 받지 않아요.</strong><br />공용 기기에서는 다른 사람이 볼 수 있으므로 저장하지 마세요.</p>
+            </div>
+            {profileError && <p role="alert" className="font-bold text-rose-700">{profileError}</p>}
           </div>
-          <div className="hole-mark" aria-hidden="true"><span>18</span></div>
+
+          <DialogFooter className="-mx-5 -mb-5 grid grid-cols-2 gap-2 rounded-b-3xl p-4 sm:-mx-6 sm:-mb-6 sm:grid-cols-[auto_1fr_1fr]">
+            <Button type="button" variant="destructive" size="lg" className="h-12 text-base font-black" disabled={!hasProfile(profile)} onClick={deleteProfile}>
+              <Trash2 aria-hidden="true" /> 삭제
+            </Button>
+            <Button type="button" variant="outline" size="lg" className="h-12 text-base font-black" onClick={() => setProfileOpen(false)}>취소</Button>
+            <Button type="button" size="lg" className="col-span-2 h-12 text-base font-black sm:col-span-1" onClick={saveProfile}>
+              <Save aria-hidden="true" /> 저장
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={installHelpOpen} onOpenChange={setInstallHelpOpen}>
+        <DialogContent showCloseButton={false} className="max-w-md rounded-3xl p-5 text-base sm:p-6">
+          <DialogHeader>
+            <span className="mb-1 grid size-14 place-items-center rounded-2xl bg-emerald-700 text-white"><Smartphone className="size-7" aria-hidden="true" /></span>
+            <DialogTitle className="text-2xl font-black text-slate-950">휴대폰에 앱 설치하기</DialogTitle>
+            <DialogDescription className="text-base leading-7 text-slate-600">설치비 없이 홈 화면에서 앱처럼 바로 열 수 있어요.</DialogDescription>
+          </DialogHeader>
+          {isIos ? (
+            <ol className="grid gap-3 rounded-2xl bg-emerald-50 p-4 text-base leading-7 text-slate-800">
+              <li><strong>1.</strong> Safari 아래쪽의 <strong>공유 버튼</strong>을 누르세요.</li>
+              <li><strong>2.</strong> 메뉴에서 <strong>홈 화면에 추가</strong>를 누르세요.</li>
+              <li><strong>3.</strong> 오른쪽 위의 <strong>추가</strong>를 누르세요.</li>
+            </ol>
+          ) : (
+            <ol className="grid gap-3 rounded-2xl bg-emerald-50 p-4 text-base leading-7 text-slate-800">
+              <li><strong>1.</strong> 브라우저 오른쪽 위의 <strong>점 3개 메뉴</strong>를 누르세요.</li>
+              <li><strong>2.</strong> <strong>앱 설치</strong> 또는 <strong>홈 화면에 추가</strong>를 누르세요.</li>
+              <li><strong>3.</strong> <strong>설치</strong>를 누르세요.</li>
+            </ol>
+          )}
+          <DialogFooter className="-mx-5 -mb-5 rounded-b-3xl p-4 sm:-mx-6 sm:-mb-6">
+            <Button type="button" size="lg" className="h-12 w-full text-base font-black" onClick={() => setInstallHelpOpen(false)}>확인</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <main className="min-h-screen bg-background text-foreground">
+      <header className="scoreboard-band">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-5">
+          <div>
+            <p className="eyebrow">전국 대회 일정과 접수 정보</p>
+            <h1 className="text-2xl font-black tracking-[-0.035em] sm:text-4xl">파크골프 대회 찾기</h1>
+            <p className="mt-1 text-sm font-semibold text-emerald-50 sm:text-base">공식 공고를 모아 보기 쉽게 정리했어요.</p>
+          </div>
+          <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
+            <Button variant="outline" size="lg" className="h-12 border-white/70 bg-white px-4 text-base font-black text-emerald-900 hover:bg-emerald-50" onClick={openProfileEditor}>
+              <UserRound aria-hidden="true" /> {hasProfile(profile) ? '내 정보 수정' : '내 정보 등록'}
+            </Button>
+            <Button variant="outline" size="lg" className="h-12 border-white/70 bg-emerald-950/35 px-4 text-base font-black text-white hover:bg-emerald-950/55 hover:text-white" onClick={() => void startInstall()} disabled={isInstalled}>
+              {isInstalled ? <CheckCircle2 aria-hidden="true" /> : <Download aria-hidden="true" />} {isInstalled ? '앱 설치됨' : '앱 설치'}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -377,11 +586,27 @@ export default function Home() {
           <div className="summary-tile col-span-2 sm:col-span-1"><span>신청 완료</span><strong>{applied.size}개</strong></div>
         </div>
 
+        <section className="profile-panel mb-4" aria-labelledby="profile-heading">
+          <div className="flex min-w-0 items-start gap-3">
+            <span className="profile-icon" aria-hidden="true"><ShieldCheck /></span>
+            <div className="min-w-0">
+              <h2 id="profile-heading" className="text-lg font-black text-emerald-950">내 정보는 이 기기에만 저장돼요</h2>
+              <p className="text-base text-slate-700">
+                {hasProfile(profile) ? profileSummary(profile) : '활동 지역과 협회 회원 여부를 등록하면 내 지역 대회를 먼저 볼 수 있어요.'}
+              </p>
+              <p className="mt-1 text-sm text-slate-500">관심 대회와 신청 완료 표시도 다른 사용자에게 공개되지 않습니다.</p>
+            </div>
+          </div>
+          <Button variant="outline" size="lg" className="h-12 w-full shrink-0 border-emerald-300 bg-white px-5 text-base font-black text-emerald-900 sm:w-auto" onClick={openProfileEditor}>
+            <UserRound aria-hidden="true" /> {hasProfile(profile) ? '내 정보 보기·수정' : '내 정보 등록'}
+          </Button>
+        </section>
+
         <section aria-labelledby="filter-heading" className="mb-5 rounded-3xl border bg-white p-4 shadow-sm sm:p-5">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
-              <p className="flex items-center gap-2 font-black text-emerald-900"><Sparkles className="size-5" aria-hidden="true" />경주 인접 지역 우선</p>
-              <p className="text-sm text-slate-600">경북·경남·대구·울산을 먼저 보여드려요.</p>
+              <p className="flex items-center gap-2 font-black text-emerald-900"><Sparkles className="size-5" aria-hidden="true" />{profile.region ? `${profile.region} 대회 우선` : '내 지역 대회 먼저 보기'}</p>
+              <p className="text-sm text-slate-600">{profile.region ? '내 정보에 등록한 지역을 먼저 보여드려요.' : '내 정보에서 활동 지역을 등록해 주세요.'}</p>
             </div>
             <Button variant="ghost" size="lg" className="h-12 shrink-0 px-3 text-base" onClick={() => setFilters(emptyFilters)}>
               <RotateCcw aria-hidden="true" /> 초기화
@@ -414,9 +639,9 @@ export default function Home() {
                 </SelectContent>
               </Select>
             </div>
-            <label htmlFor="nearby-only" className="flex h-12 cursor-pointer items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 text-base font-black text-emerald-900">
-              <Checkbox id="nearby-only" checked={filters.nearbyOnly} onCheckedChange={(checked) => setFilters({ ...filters, nearbyOnly: checked === true })} className="size-5" />
-              인접 지역만
+            <label htmlFor="nearby-only" className={`flex h-12 items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 text-base font-black text-emerald-900 ${profile.region ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'}`}>
+              <Checkbox id="nearby-only" checked={filters.nearbyOnly} disabled={!profile.region} onCheckedChange={(checked) => setFilters({ ...filters, nearbyOnly: checked === true })} className="size-5" />
+              내 지역만
             </label>
           </div>
           <p className="mt-2 text-sm text-slate-500">정렬: {sort === 'event' ? '개최일 최신순' : '접수 마감일순'} · 모든 날짜는 한국시간 기준</p>
@@ -485,7 +710,7 @@ export default function Home() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <Badge variant="outline" className={`h-auto px-3 py-1.5 text-sm font-black ${statusStyle[status]}`}>{status}</Badge>
-                        {isNearby(event) && <span className="rounded-full bg-lime-100 px-3 py-1 text-sm font-black text-lime-900">경주 우선</span>}
+                        {isHomeRegion(event, profile.region) && <span className="rounded-full bg-lime-100 px-3 py-1 text-sm font-black text-lime-900">내 지역</span>}
                         <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-800">{event.region || '전국'}</span>
                       </div>
                       <Button variant={favorite ? 'default' : 'outline'} size="icon-lg" className="size-12 shrink-0 rounded-full" aria-label={favorite ? `${event.name} 관심 해제` : `${event.name} 관심 저장`} aria-pressed={favorite} onClick={() => toggle(setFavorites, event.id)}>
@@ -520,6 +745,17 @@ export default function Home() {
                       <p className="icon-row"><Clock3 aria-hidden="true" /><span><strong>접수 마감</strong><br />{formatDate(event.registration_end, true)}</span></p>
                       <p className="icon-row"><Users aria-hidden="true" /><span><strong>참가 자격</strong><br />{event.eligibility.join(' · ') || '참가 자격 확인 필요'}</span></p>
                     </div>
+
+                    {hasProfile(profile) && (
+                      <details className="my-info-details mt-4">
+                        <summary><UserRound aria-hidden="true" />신청할 때 내 정보 보기</summary>
+                        <div className="my-info-content">
+                          <p className="font-bold text-slate-800">{profileSummary(profile)}</p>
+                          <p className="mt-1 text-sm text-slate-600">이 기기에만 표시되며 접수 페이지로 자동 전달되지 않아요.</p>
+                          <Button type="button" variant="link" className="mt-1 h-10 px-0 text-base font-black text-emerald-800" onClick={openProfileEditor}>내 정보 수정</Button>
+                        </div>
+                      </details>
+                    )}
 
                     {eventConflicts.length > 0 && (
                       <div role="alert" className="mt-4 flex gap-2 rounded-2xl border border-orange-300 bg-orange-50 p-3 font-bold text-orange-950">
@@ -607,10 +843,15 @@ export default function Home() {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            <p className="mt-4 flex items-start gap-2 text-sm text-slate-500"><ChevronRight className="mt-0.5 size-4 shrink-0" aria-hidden="true" />참가 전에 공식 공고에서 자격, 접수 시간, 참가비를 한 번 더 확인해 주세요. 이 사이트에는 이름·연락처 같은 개인정보를 저장하지 않습니다.</p>
+            <p className="mt-4 flex items-start gap-2 text-sm text-slate-500"><ChevronRight className="mt-0.5 size-4 shrink-0" aria-hidden="true" />참가 전에 공식 공고에서 자격, 접수 시간, 참가비를 한 번 더 확인해 주세요.</p>
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm font-bold">
+              <a href={`${basePath}/privacy/`} className="text-emerald-800 underline underline-offset-4">개인정보 안내</a>
+              <span className="text-slate-500">광고·로그인 기능은 현재 연결되어 있지 않습니다.</span>
+            </div>
           </footer>
         )}
       </section>
-    </main>
+      </main>
+    </>
   );
 }

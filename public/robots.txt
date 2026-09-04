@@ -1,3 +1,4 @@
 User-agent: *
-Disallow: /
+Allow: /
 
+Sitemap: https://vermom.github.io/park-golf-finder/sitemap.xml

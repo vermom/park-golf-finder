@@ -60,8 +60,12 @@ describe('검색·필터·정렬', () => {
     expect(filterEvents(events, { ...filters, query: '제주' }, new Date('2026-09-04T09:00:00+09:00')).map((item) => item.id)).toEqual(['two']);
   });
 
-  it('경주 우선 지역을 먼저 정렬한다', () => {
-    expect(sortEvents(events, 'event')[0].id).toBe('one');
+  it('사용자가 등록한 지역을 먼저 정렬한다', () => {
+    expect(sortEvents(events, 'event', '제주')[0].id).toBe('two');
+  });
+
+  it('내 지역만 보기를 적용한다', () => {
+    expect(filterEvents(events, { ...filters, nearbyOnly: true }, new Date('2026-09-04T09:00:00+09:00'), '경북').map((item) => item.id)).toEqual(['one']);
   });
 
   it('같은 우선 지역에서는 개최일이 가장 최신인 대회를 먼저 정렬한다', () => {
