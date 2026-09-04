@@ -1,4 +1,5 @@
 export type InstallBrowser = 'samsung' | 'ios' | 'android' | 'other';
+export type InstallDialogMode = 'samsung' | 'prompt' | 'ios' | 'checking' | 'installed-help' | 'manual';
 
 export function detectInstallBrowser(userAgent: string, maxTouchPoints = 0): InstallBrowser {
   if (/SamsungBrowser\//i.test(userAgent)) return 'samsung';
@@ -10,6 +11,19 @@ export function detectInstallBrowser(userAgent: string, maxTouchPoints = 0): Ins
 
 export function canUseNativeInstallPrompt(browser: InstallBrowser) {
   return browser !== 'samsung';
+}
+
+export function resolveInstallDialogMode(
+  browser: InstallBrowser,
+  hasPrompt: boolean,
+  installContinuation: boolean,
+  waitExpired: boolean,
+): InstallDialogMode {
+  if (browser === 'samsung') return 'samsung';
+  if (hasPrompt) return 'prompt';
+  if (browser === 'ios') return 'ios';
+  if (browser === 'android' && installContinuation) return waitExpired ? 'installed-help' : 'checking';
+  return 'manual';
 }
 
 export function buildChromeIntentUrl(pageUrl: string) {

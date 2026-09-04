@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildChromeIntentUrl, canUseNativeInstallPrompt, detectInstallBrowser } from './pwa-install';
+import {
+  buildChromeIntentUrl,
+  canUseNativeInstallPrompt,
+  detectInstallBrowser,
+  resolveInstallDialogMode,
+} from './pwa-install';
 
 describe('브라우저별 안전한 설치 안내', () => {
   const samsungUserAgent = 'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 Chrome/140.0 Mobile Safari/537.36 SamsungBrowser/30.0';
@@ -17,6 +22,14 @@ describe('브라우저별 안전한 설치 안내', () => {
     expect(canUseNativeInstallPrompt('android')).toBe(true);
     expect(detectInstallBrowser('Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)')).toBe('ios');
     expect(detectInstallBrowser('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15)', 5)).toBe('ios');
+  });
+
+  it('Chrome 설치 버튼이 없으면 잠시 확인한 뒤 기존 앱 찾기 안내로 전환한다', () => {
+    expect(resolveInstallDialogMode('android', true, true, false)).toBe('prompt');
+    expect(resolveInstallDialogMode('android', false, true, false)).toBe('checking');
+    expect(resolveInstallDialogMode('android', false, true, true)).toBe('installed-help');
+    expect(resolveInstallDialogMode('android', false, false, true)).toBe('manual');
+    expect(resolveInstallDialogMode('samsung', true, true, true)).toBe('samsung');
   });
 
   it('Chrome 열기 주소는 공식 HTTPS 페이지만 전달하고 실패하면 안전하게 중단한다', () => {

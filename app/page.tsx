@@ -65,6 +65,7 @@ import {
   buildChromeIntentUrl,
   canUseNativeInstallPrompt,
   detectInstallBrowser,
+  resolveInstallDialogMode,
   type InstallBrowser,
 } from '@/lib/pwa-install';
 
@@ -266,6 +267,7 @@ export default function Home() {
   const [installBrowser, setInstallBrowser] = useState<InstallBrowser>('other');
   const [chromeOpenUrl, setChromeOpenUrl] = useState('');
   const [isInstallContinuation, setIsInstallContinuation] = useState(false);
+  const [installPromptWaitExpired, setInstallPromptWaitExpired] = useState(false);
   const requestedRouteKeys = useRef(new Set<string>());
 
   /* oxlint-disable react/react-compiler -- 브라우저 저장값과 외부 JSON을 최초 1회 동기화합니다. */
@@ -338,6 +340,7 @@ export default function Home() {
         setInstallPrompt(null);
         return;
       }
+      setInstallPromptWaitExpired(false);
       setInstallPrompt(event as BeforeInstallPromptEvent);
     };
     const handleInstalled = () => {
@@ -354,6 +357,12 @@ export default function Home() {
       window.removeEventListener('appinstalled', handleInstalled);
     };
   }, []);
+
+  useEffect(() => {
+    if (!installHelpOpen || installBrowser !== 'android' || !isInstallContinuation || installPrompt) return;
+    const timer = window.setTimeout(() => setInstallPromptWaitExpired(true), 1800);
+    return () => window.clearTimeout(timer);
+  }, [installBrowser, installHelpOpen, installPrompt, isInstallContinuation]);
 
   useEffect(() => {
     const context = document.modelContext;
@@ -410,6 +419,12 @@ export default function Home() {
 
   const openCount = allEvents.filter((event) => ['접수 중', '마감 임박'].includes(computeStatus(event))).length;
   const failedSources = data?.meta.source_statuses.filter((source) => source.status === 'failed').length ?? 0;
+  const installDialogMode = resolveInstallDialogMode(
+    installBrowser,
+    Boolean(installPrompt),
+    isInstallContinuation,
+    installPromptWaitExpired,
+  );
 
   useEffect(() => {
     if (!userLocation) return;
@@ -631,7 +646,7 @@ export default function Home() {
               {installBrowser === 'samsung' ? 'Chrome은 설치할 때 한 번만 열고, 설치 후에는 홈 화면 아이콘으로 바로 실행해요.' : '설치비 없이 홈 화면에서 앱처럼 바로 열 수 있어요.'}
             </p>
           </div>
-          {installBrowser === 'samsung' ? (
+          {installDialogMode === 'samsung' ? (
             <div className="grid gap-3 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4">
               <ol className="install-steps">
                 <li><span>1</span><div>아래의 <strong>Chrome에서 설치 계속</strong>을 누르세요.</div></li>
@@ -646,7 +661,7 @@ export default function Home() {
               <p className="rounded-xl bg-white p-3 text-base font-bold leading-7 text-emerald-950">설치 후에는 Chrome에 다시 들어갈 필요가 없어요. 일반 앱처럼 홈 화면 아이콘만 누르면 됩니다.</p>
               <p className="text-sm font-semibold leading-6 text-slate-600">이전에 보인 보안 경고에서는 ‘무시하고 설치하기’를 누르지 말고 ‘확인’으로 닫아 주세요.</p>
             </div>
-          ) : installPrompt ? (
+          ) : installDialogMode === 'prompt' ? (
             <div className="grid gap-3 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-4 text-center">
               <p className="text-lg font-black leading-8 text-emerald-950">
                 {isInstallContinuation ? '이제 마지막 단계예요.' : '아래 버튼을 누르세요.'}<br />다음 화면에서 ‘설치’만 누르면 됩니다.
@@ -656,7 +671,26 @@ export default function Home() {
               </Button>
               <p className="text-base font-bold leading-7 text-emerald-950">설치 후에는 홈 화면의 ‘파크골프 대회’ 아이콘으로 바로 실행됩니다.</p>
             </div>
-          ) : installBrowser === 'ios' ? (
+          ) : installDialogMode === 'checking' ? (
+            <div className="grid min-h-40 place-items-center gap-3 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-5 text-center" aria-live="polite">
+              <LoaderCircle className="size-9 animate-spin text-emerald-700" aria-hidden="true" />
+              <p className="text-lg font-black text-emerald-950">설치 상태를 확인하고 있어요…</p>
+            </div>
+          ) : installDialogMode === 'installed-help' ? (
+            <div className="grid gap-4 rounded-2xl border-2 border-sky-300 bg-sky-50 p-4">
+              <div>
+                <h3 className="text-xl font-black leading-8 text-sky-950">이미 설치되어 있을 가능성이 커요</h3>
+                <p className="mt-1 leading-7 text-slate-700">Chrome은 같은 앱이 설치되어 있으면 중복 설치 버튼을 보여주지 않습니다.</p>
+              </div>
+              <ol className="install-steps">
+                <li><span>1</span><div>Chrome을 닫고 <strong>휴대폰 홈 화면</strong>으로 가세요.</div></li>
+                <li><span>2</span><div>홈 화면을 <strong>아래에서 위로</strong> 밀어 앱스 화면을 여세요.</div></li>
+                <li><span>3</span><div><strong>파크골프 대회</strong>를 찾아 아이콘을 길게 누르세요.</div></li>
+                <li><span>4</span><div><strong>홈 화면에 추가</strong>를 누르세요.</div></li>
+              </ol>
+              <p className="rounded-xl border border-amber-300 bg-amber-50 p-3 font-bold leading-7 text-amber-950">앱스 화면에도 없다면: 휴대폰 <strong>설정 → 애플리케이션 → 파크골프 대회 → 삭제</strong> 후 홈페이지에서 다시 설치하세요.</p>
+            </div>
+          ) : installDialogMode === 'ios' ? (
             <ol className="install-steps">
               <li><span>1</span><div><strong><Share2 className="inline size-6" aria-hidden="true" /> 공유</strong> 버튼을 누르세요.</div></li>
               <li><span>2</span><div><strong>홈 화면에 추가</strong>를 누르세요.</div></li>
@@ -669,7 +703,7 @@ export default function Home() {
               <li><span>3</span><div><strong>설치</strong>를 누르세요.</div></li>
             </ol>
           )}
-          {!installPrompt && installBrowser !== 'ios' && installBrowser !== 'samsung' && <p className="rounded-xl bg-amber-50 p-3 font-bold leading-7 text-amber-950">카카오톡 안에서 열었다면 먼저 점 3개 메뉴에서 ‘다른 브라우저로 열기’를 눌러주세요.</p>}
+          {installDialogMode === 'manual' && <p className="rounded-xl bg-amber-50 p-3 font-bold leading-7 text-amber-950">카카오톡 안에서 열었다면 먼저 점 3개 메뉴에서 ‘다른 브라우저로 열기’를 눌러주세요.</p>}
           <div className="-mx-5 -mb-5 rounded-b-3xl border-t bg-slate-50 p-4 sm:-mx-6 sm:-mb-6">
             <Button type="button" variant="outline" size="lg" className="h-14 w-full text-lg font-black" onClick={() => setInstallHelpOpen(false)}>
               {installBrowser === 'samsung' ? '취소' : '나중에 하기'}
