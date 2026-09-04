@@ -9,7 +9,7 @@
     "dev": "vinext dev",
     "build": "node scripts/build.mjs",
     "start": "wrangler dev --config dist/server/wrangler.json",
-    "lint": "oxlint app/page.tsx app/page.test.tsx app/layout.tsx lib/events.ts lib/distance.ts lib/profile.ts next.config.ts scripts/build.mjs",
+    "lint": "oxlint app/page.tsx app/page.test.tsx app/layout.tsx lib/events.ts lib/distance.ts lib/profile.ts lib/pwa-install.ts lib/pwa-install.test.ts next.config.ts scripts/build.mjs",
     "format": "oxfmt",
     "test": "vitest run",
     "collect": "python scripts/collect.py",
