@@ -13,7 +13,6 @@ import {
   ExternalLink,
   FileText,
   Heart,
-  Info,
   LoaderCircle,
   LocateFixed,
   MapPin,
@@ -51,7 +50,6 @@ import {
   type EventFilters,
   type EventItem,
   type RegistrationStatus,
-  type TrustStatus,
 } from '@/lib/events';
 import { brouterUrl, formatDrivingRoute, parseBrouterRoute, type DrivingRoute } from '@/lib/distance';
 import {
@@ -135,14 +133,6 @@ const statusStyle: Record<RegistrationStatus, string> = {
   '마감 임박': 'bg-orange-500 text-white border-orange-500',
   '접수 마감': 'bg-slate-200 text-slate-800 border-slate-300',
   '대회 종료': 'bg-slate-700 text-white border-slate-700',
-};
-
-const trustStyle: Record<TrustStatus, string> = {
-  '공식 확인': 'text-emerald-800 bg-emerald-50',
-  '공식 공고에서 자동수집': 'text-emerald-800 bg-emerald-50',
-  '사람이 직접 등록': 'text-blue-800 bg-blue-50',
-  '세부 내용 확인 필요': 'text-amber-900 bg-amber-50',
-  '링크 오류 또는 접수처 확인 필요': 'text-rose-900 bg-rose-50',
 };
 
 function formatDate(value: string | null, withTime = false) {
@@ -886,10 +876,6 @@ export default function Home() {
                       </AccordionItem>
                     </Accordion>
 
-                    <div className={`mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl px-3 py-2 text-sm ${trustStyle[event.trust_status]}`}>
-                      <span className="flex items-center gap-1.5 font-black"><Info className="size-4" aria-hidden="true" />{event.trust_status}</span>
-                      <span>{event.source_type} · {event.source_name} · {formatDate(event.last_checked_at, true)} 확인</span>
-                    </div>
                   </div>
                 </article>
               );

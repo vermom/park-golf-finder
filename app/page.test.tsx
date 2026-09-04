@@ -1,4 +1,5 @@
 import { renderToStaticMarkup } from 'react-dom/server';
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import Home from './page';
@@ -23,5 +24,11 @@ describe('내 정보 선택창 호환성', () => {
     expect(markup).toContain('휴대폰에 앱 설치하기');
     expect(markup).toContain('홈 화면에 추가');
     expect(markup).toContain('나중에 하기');
+  });
+
+  it('대회 카드에 자동수집 출처 문구를 반복해서 표시하지 않는다', () => {
+    const source = readFileSync(new URL('./page.tsx', import.meta.url), 'utf8');
+    expect(source).not.toContain('event.source_type');
+    expect(source).not.toContain('event.trust_status');
   });
 });
