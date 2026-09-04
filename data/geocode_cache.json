@@ -1,0 +1,158 @@
+{
+  "강원도 화천군 하남면 춘화로 3061-17": {
+    "latitude": 38.07599,
+    "longitude": 127.688102,
+    "matched_address": "강원도 화천군 하남면 거례리 춘화로 3061-17",
+    "accuracy": "address"
+  },
+  "전남 화순군 청풍면 풍암리 93-9": {
+    "latitude": 34.926833,
+    "longitude": 126.983534,
+    "matched_address": "전남 화순군 청풍면 풍암리 93-9",
+    "accuracy": "address"
+  },
+  "경남 양산시 물금읍 물금리 819-12": {
+    "latitude": 35.307615,
+    "longitude": 128.98428,
+    "matched_address": "경남 양산시 물금읍 물금리",
+    "accuracy": "locality"
+  },
+  "경남 밀양시 삼문동 631번지": {
+    "latitude": 35.48266,
+    "longitude": 128.742546,
+    "matched_address": "경남 밀양시 삼문동 631",
+    "accuracy": "address"
+  },
+  "충남 아산시 염치읍 석정리 535-16": {
+    "latitude": 36.799797,
+    "longitude": 126.998033,
+    "matched_address": "충남 아산시 염치읍 석정리 535-16",
+    "accuracy": "address"
+  },
+  "충청남도 계룡시 신도안면 정장리 6": {
+    "latitude": 36.303127,
+    "longitude": 127.237671,
+    "matched_address": "충청남도 계룡시 신도안면 정장리 6",
+    "accuracy": "address"
+  },
+  "전북특별자치도 진안군 진안읍 진무로 1514": {
+    "latitude": 35.815936,
+    "longitude": 127.461421,
+    "matched_address": "전북특별자치도 진안군 진안읍 운산리 진무로 1514",
+    "accuracy": "address"
+  },
+  "경남 함안군 칠서면 이룡리 208번지": {
+    "latitude": 35.388912,
+    "longitude": 128.51242,
+    "matched_address": "경남 함안군 칠서면 이룡리 208",
+    "accuracy": "address"
+  },
+  "경북 영천시 조교동 51-1": {
+    "latitude": 35.968377,
+    "longitude": 128.967104,
+    "matched_address": "경북 영천시 조교동 51-1",
+    "accuracy": "address"
+  },
+  "충북 충주시 충원대로 1005": {
+    "latitude": 37.015861,
+    "longitude": 127.918139,
+    "matched_address": "충북 충주시 목행동 충원대로 1005",
+    "accuracy": "address"
+  },
+  "경상북도 문경시 창리강변길 40": {
+    "latitude": 36.614839,
+    "longitude": 128.209147,
+    "matched_address": "경상북도 문경시 흥덕동 창리강변길 40",
+    "accuracy": "address"
+  },
+  "경상북도 구미시 진평동 880": {
+    "latitude": 36.094719,
+    "longitude": 128.401339,
+    "matched_address": "경상북도 구미시 진평동 880",
+    "accuracy": "address"
+  },
+  "경기도 연천군 군남면 진상리 610": {
+    "latitude": 38.055122,
+    "longitude": 127.020991,
+    "matched_address": "경기도 연천군 군남면 진상리 610",
+    "accuracy": "address"
+  },
+  "경기 양평군 강상면 교평리 419": {
+    "latitude": 37.485582,
+    "longitude": 127.485013,
+    "matched_address": "경기 양평군 강상면 교평리 419",
+    "accuracy": "address"
+  },
+  "경상남도 진주시 금산면 송백리 660-1번지": {
+    "latitude": 35.206761,
+    "longitude": 128.131357,
+    "matched_address": "경상남도 진주시 금산면 송백리 660-1",
+    "accuracy": "address"
+  },
+  "부산광역시 강서구 대저1동 1-5": {
+    "latitude": 35.207415,
+    "longitude": 128.984748,
+    "matched_address": "부산광역시 강서구 대저1동 1-5",
+    "accuracy": "address"
+  },
+  "전북 전주시 덕진구 화전신정길 20-24": {
+    "latitude": 35.893881,
+    "longitude": 127.074346,
+    "matched_address": "전북 전주시 덕진구 화전동 화전신정길 20-24",
+    "accuracy": "address"
+  },
+  "전북 임실군 오수면 충효로 2132": {
+    "latitude": 35.547744,
+    "longitude": 127.333113,
+    "matched_address": "전북 임실군 오수면 오수리 충효로 2132",
+    "accuracy": "address"
+  },
+  "광주광역시 광산구 서봉동 205-6 호남대학교": {
+    "latitude": 35.150682,
+    "longitude": 126.758268,
+    "matched_address": "광주광역시 광산구 서봉동 205-6",
+    "accuracy": "address"
+  },
+  "경남 합천군 합천읍 합천리 17-1": {
+    "latitude": 35.571349,
+    "longitude": 128.170507,
+    "matched_address": "경남 합천군 합천읍 합천리 17-1",
+    "accuracy": "address"
+  },
+  "경북 고령군 대가야읍 일량로 107-16": {
+    "latitude": 35.71873,
+    "longitude": 128.273969,
+    "matched_address": "경북 고령군 대가야읍 고아리 일량로 107",
+    "accuracy": "address"
+  },
+  "대구광역시 달성군 다사읍 다사로 820": {
+    "latitude": 35.88233,
+    "longitude": 128.509594,
+    "matched_address": "대구광역시 달성군 다사읍 방천리 다사로 820",
+    "accuracy": "address"
+  },
+  "대구 달성군 다사읍 매곡리 354-1": {
+    "latitude": 35.867036,
+    "longitude": 128.466481,
+    "matched_address": "대구 달성군 다사읍 매곡리 354-1",
+    "accuracy": "address"
+  },
+  "전북특별자치도 정읍시 신태인읍 신룡리 881번지": {
+    "latitude": 35.701419,
+    "longitude": 126.871705,
+    "matched_address": "전북특별자치도 정읍시 신태인읍",
+    "accuracy": "locality"
+  },
+  "경북 울진군 근남면 수산리 337-4": {
+    "latitude": 36.966753,
+    "longitude": 129.401571,
+    "matched_address": "경북 울진군 근남면 수산리 337-4",
+    "accuracy": "address"
+  },
+  "경북 예천군 예천읍 왕신길 84-9": {
+    "latitude": 36.642557,
+    "longitude": 128.446425,
+    "matched_address": "경북 예천군 예천읍 서본리 왕신길 84-9",
+    "accuracy": "address"
+  }
+}

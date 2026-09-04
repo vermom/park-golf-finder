@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle,
   CalendarDays,
+  Car,
   Check,
   CheckCircle2,
   ChevronRight,
@@ -12,7 +13,10 @@ import {
   FileText,
   Heart,
   Info,
+  LoaderCircle,
+  LocateFixed,
   MapPin,
+  Navigation,
   Phone,
   RotateCcw,
   Search,
@@ -42,6 +46,7 @@ import {
   type RegistrationStatus,
   type TrustStatus,
 } from '@/lib/events';
+import { brouterUrl, formatDrivingRoute, parseBrouterRoute, type DrivingRoute } from '@/lib/distance';
 
 type SourceStatus = {
   id: string;
@@ -64,6 +69,11 @@ type EventFile = {
 
 type SavedState = { favorites: string[]; applied: string[] };
 type ViewMode = 'all' | 'favorites' | 'applied';
+type UserLocation = { latitude: number; longitude: number };
+type RouteState =
+  | { status: 'loading' }
+  | { status: 'ready'; route: DrivingRoute }
+  | { status: 'error'; message: string };
 
 declare global {
   interface Document {
@@ -189,6 +199,11 @@ export default function Home() {
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [applied, setApplied] = useState<Set<string>>(new Set());
   const [storageReady, setStorageReady] = useState(false);
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [locationStatus, setLocationStatus] = useState<'idle' | 'requesting' | 'ready' | 'error'>('idle');
+  const [locationMessage, setLocationMessage] = useState('');
+  const [routes, setRoutes] = useState<Record<string, RouteState>>({});
+  const requestedRouteKeys = useRef(new Set<string>());
 
   /* oxlint-disable react/react-compiler -- 브라우저 저장값과 외부 JSON을 최초 1회 동기화합니다. */
   useEffect(() => {
@@ -273,6 +288,40 @@ export default function Home() {
   const openCount = allEvents.filter((event) => ['접수 중', '마감 임박'].includes(computeStatus(event))).length;
   const failedSources = data?.meta.source_statuses.filter((source) => source.status === 'failed').length ?? 0;
 
+  useEffect(() => {
+    if (!userLocation) return;
+    const destinations = new Map<string, NonNullable<EventItem['venue_location']>>();
+    for (const event of shownEvents) {
+      const destination = event.venue_location;
+      if (!destination) continue;
+      const key = `${destination.latitude},${destination.longitude}`;
+      if (!requestedRouteKeys.current.has(key)) destinations.set(key, destination);
+    }
+    if (!destinations.size) return;
+
+    const queue = [...destinations.entries()];
+    for (const [key] of queue) requestedRouteKeys.current.add(key);
+
+    let cursor = 0;
+    const worker = async () => {
+      while (cursor < queue.length) {
+        const [key, destination] = queue[cursor++];
+        try {
+          const response = await fetch(brouterUrl(userLocation, destination));
+          if (!response.ok) throw new Error('경로 서비스 응답 오류');
+          const route = parseBrouterRoute(await response.json());
+          setRoutes((current) => ({ ...current, [key]: { status: 'ready', route } }));
+        } catch {
+          setRoutes((current) => ({
+            ...current,
+            [key]: { status: 'error', message: '지금은 거리를 계산할 수 없어요. 길찾기로 확인해 주세요.' },
+          }));
+        }
+      }
+    };
+    void Promise.all([worker(), worker()]);
+  }, [shownEvents, userLocation]);
+
   const toggle = (setter: React.Dispatch<React.SetStateAction<Set<string>>>, id: string) => {
     setter((current) => {
       const next = new Set(current);
@@ -280,6 +329,32 @@ export default function Home() {
       else next.add(id);
       return next;
     });
+  };
+
+  const requestLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationStatus('error');
+      setLocationMessage('이 브라우저에서는 위치 확인을 지원하지 않아요.');
+      return;
+    }
+    setLocationStatus('requesting');
+    setLocationMessage('현재 위치를 확인하고 있어요…');
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        requestedRouteKeys.current.clear();
+        setRoutes({});
+        setUserLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+        setLocationStatus('ready');
+        setLocationMessage('현재 위치를 확인했어요. 자동차 거리와 예상 시간을 계산합니다.');
+      },
+      (positionError) => {
+        setLocationStatus('error');
+        setLocationMessage(positionError.code === positionError.PERMISSION_DENIED
+          ? '위치 권한이 꺼져 있어요. 주소창의 자물쇠 버튼에서 위치를 허용해 주세요.'
+          : '현재 위치를 확인하지 못했어요. 잠시 후 다시 눌러 주세요.');
+      },
+      { enableHighAccuracy: false, timeout: 15_000, maximumAge: 300_000 },
+    );
   };
 
   return (
@@ -347,24 +422,41 @@ export default function Home() {
           <p className="mt-2 text-sm text-slate-500">정렬: {sort === 'event' ? '개최일순' : '접수 마감일순'} · 모든 날짜는 한국시간 기준</p>
         </section>
 
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mx-auto mb-4 flex w-full min-w-0 max-w-4xl flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-bold text-emerald-700">지금 확인할 대회</p>
             <h2 className="text-2xl font-black tracking-tight">{data ? `${shownEvents.length}개를 찾았어요` : '대회를 찾고 있어요'}</h2>
           </div>
-          <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as ViewMode)}>
-            <TabsList className="h-12 w-full rounded-xl bg-emerald-100 p-1 sm:w-auto">
-              <TabsTrigger className="px-4 text-base font-bold" value="all">전체</TabsTrigger>
-              <TabsTrigger className="px-4 text-base font-bold" value="favorites">관심 {favorites.size}</TabsTrigger>
-              <TabsTrigger className="px-4 text-base font-bold" value="applied">신청 {applied.size}</TabsTrigger>
+          <Tabs className="w-full min-w-0 sm:w-auto" value={viewMode} onValueChange={(value) => setViewMode(value as ViewMode)}>
+            <TabsList className="grid h-12 w-full grid-cols-3 rounded-xl bg-emerald-100 p-1 sm:flex sm:w-auto">
+              <TabsTrigger className="min-w-0 px-2 text-base font-bold sm:px-4" value="all">전체</TabsTrigger>
+              <TabsTrigger className="min-w-0 px-2 text-base font-bold sm:px-4" value="favorites">관심 {favorites.size}</TabsTrigger>
+              <TabsTrigger className="min-w-0 px-2 text-base font-bold sm:px-4" value="applied">신청 {applied.size}</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
 
+        <section className="location-panel mx-auto mb-4 w-full min-w-0 max-w-4xl" aria-labelledby="location-heading">
+          <div className="flex min-w-0 items-start gap-3">
+            <span className="location-icon" aria-hidden="true"><Car /></span>
+            <div className="min-w-0">
+              <h2 id="location-heading" className="text-lg font-black text-emerald-950">경기장까지 자동차 거리</h2>
+              <p className="text-base text-slate-700" aria-live="polite">
+                {locationMessage || '버튼을 누르면 내 위치에서 각 경기장까지 거리와 예상 시간을 보여드려요.'}
+              </p>
+              <p className="mt-1 text-sm text-slate-500">위치는 저장하지 않으며, 거리 계산을 위해서만 사용합니다.</p>
+            </div>
+          </div>
+          <Button size="lg" className="h-13 w-full shrink-0 rounded-xl px-5 text-base font-black sm:w-auto" onClick={requestLocation} disabled={locationStatus === 'requesting'}>
+            {locationStatus === 'requesting' ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <LocateFixed aria-hidden="true" />}
+            {locationStatus === 'ready' ? '거리 다시 계산' : locationStatus === 'requesting' ? '위치 확인 중' : '내 위치로 거리 보기'}
+          </Button>
+        </section>
+
         {error ? (
           <div role="alert" className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-lg font-bold text-rose-900"><AlertTriangle className="mb-2 size-7" aria-hidden="true" />{error}</div>
         ) : !data ? (
-          <div aria-live="polite" className="grid gap-3 lg:grid-cols-2">{[1, 2, 3, 4].map((item) => <div key={item} className="h-72 animate-pulse rounded-3xl bg-emerald-100/70" />)}</div>
+          <div aria-live="polite" className="mx-auto grid max-w-4xl gap-3">{[1, 2, 3].map((item) => <div key={item} className="h-72 animate-pulse rounded-3xl bg-emerald-100/70" />)}</div>
         ) : shownEvents.length === 0 ? (
           <Empty className="min-h-72 border-2 border-emerald-200 bg-white">
             <EmptyHeader>
@@ -375,12 +467,18 @@ export default function Home() {
             <Button size="lg" className="h-12 px-5 text-base" onClick={() => { setFilters(emptyFilters); setViewMode('all'); }}>전체 대회 보기</Button>
           </Empty>
         ) : (
-          <div className="grid items-start gap-4 lg:grid-cols-2">
+          <div className="mx-auto grid w-full min-w-0 max-w-4xl items-start gap-5">
             {shownEvents.map((event) => {
               const status = computeStatus(event);
               const eventConflicts = conflicts.get(event.id) ?? [];
               const favorite = favorites.has(event.id);
               const isApplied = applied.has(event.id);
+              const destination = event.venue_location;
+              const routeKey = destination ? `${destination.latitude},${destination.longitude}` : '';
+              const routeState = routeKey ? routes[routeKey] : undefined;
+              const directionsUrl = destination
+                ? `https://map.kakao.com/link/to/${encodeURIComponent(event.venue)},${destination.latitude},${destination.longitude}`
+                : `https://map.kakao.com/link/search/${encodeURIComponent(event.venue)}`;
               return (
                 <article key={event.id} className={`event-card ${status === '접수 중' || status === '마감 임박' ? 'event-card-open' : ''}`}>
                   <div className="relative z-10">
@@ -395,10 +493,30 @@ export default function Home() {
                       </Button>
                     </div>
 
-                    <h3 className="mt-4 text-[1.4rem] font-black leading-snug tracking-[-0.025em]">{event.name}</h3>
+                    <h3 className="mt-4 break-words text-[1.4rem] font-black leading-snug tracking-[-0.025em]">{event.name}</h3>
                     <div className="mt-4 grid gap-3 text-[1rem] leading-relaxed text-slate-700">
                       <p className="icon-row"><CalendarDays aria-hidden="true" /><span><strong>개최일</strong><br />{formatPeriod(event.event_start, event.event_end)}</span></p>
                       <p className="icon-row"><MapPin aria-hidden="true" /><span><strong>경기장</strong><br />{event.venue}</span></p>
+                      {locationStatus === 'ready' && (
+                        <div className="route-row">
+                          <Car aria-hidden="true" />
+                          <span className="min-w-0">
+                            <strong>자동차 이동</strong><br />
+                            {!destination ? (
+                              <span>경기장 주소가 부족해 자동 계산은 어려워요.</span>
+                            ) : routeState?.status === 'ready' ? (
+                              <span className="route-result">{formatDrivingRoute(routeState.route)}</span>
+                            ) : routeState?.status === 'error' ? (
+                              <span>{routeState.message}</span>
+                            ) : (
+                              <span className="inline-flex items-center gap-2"><LoaderCircle className="size-4 animate-spin" aria-hidden="true" />거리 계산 중…</span>
+                            )}
+                          </span>
+                          <a href={directionsUrl} target="_blank" rel="noreferrer" className="route-link">
+                            <Navigation aria-hidden="true" /> 길찾기
+                          </a>
+                        </div>
+                      )}
                       <p className="icon-row"><Clock3 aria-hidden="true" /><span><strong>접수 마감</strong><br />{formatDate(event.registration_end, true)}</span></p>
                       <p className="icon-row"><Users aria-hidden="true" /><span><strong>참가 자격</strong><br />{event.eligibility.join(' · ') || '참가 자격 확인 필요'}</span></p>
                     </div>
@@ -410,7 +528,7 @@ export default function Home() {
                       </div>
                     )}
 
-                    <div className="mt-5 grid grid-cols-2 gap-2">
+                    <div className="mt-5 grid gap-2 sm:grid-cols-2">
                       <Button variant={isApplied ? 'default' : 'outline'} size="lg" className="h-13 rounded-xl text-base font-black" aria-pressed={isApplied} onClick={() => toggle(setApplied, event.id)}>
                         {isApplied ? <CheckCircle2 aria-hidden="true" /> : <Check aria-hidden="true" />}{isApplied ? '신청 완료됨' : '신청 완료 표시'}
                       </Button>

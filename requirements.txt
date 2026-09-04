@@ -3,3 +3,4 @@ PyYAML==6.0.3
 jsonschema==4.25.1
 pytest==8.4.2
 pypdf==6.0.0
+tzdata==2025.3

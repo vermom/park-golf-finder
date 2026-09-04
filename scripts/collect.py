@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT))
 
 from collectors.kpga import KpgaCollector  # noqa: E402
 from collectors.manual import load_manual_events  # noqa: E402
+from scripts.geocoding import enrich_venue_locations  # noqa: E402
 from scripts.validation import domain_errors  # noqa: E402
 
 KST = ZoneInfo("Asia/Seoul")
@@ -39,7 +40,7 @@ def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
         for field, value in secondary.items():
             if field in {"attachments", "eligibility", "competition_type", "preliminary_dates", "final_dates"}:
                 preferred[field] = list(dict.fromkeys([*(preferred.get(field) or []), *(value or [])]))
-            elif preferred.get(field) in {None, "", "확인 필요"} and value not in {None, ""}:
+            elif preferred.get(field) in (None, "", "확인 필요") and value not in (None, ""):
                 preferred[field] = value
         grouped[key] = preferred
     return sorted(grouped.values(), key=lambda event: (event["event_start"], event["name"]))
@@ -88,6 +89,7 @@ def main() -> int:
 
     collected.extend(load_manual_events(ROOT / "data" / "manual_events.csv", now))
     events = deduplicate(collected)
+    enrich_venue_locations(events)
     payload = {
         "meta": {
             "generated_at": now,

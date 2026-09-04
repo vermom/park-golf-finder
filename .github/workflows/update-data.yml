@@ -41,12 +41,12 @@ jobs:
       - name: 변경된 데이터만 저장
         shell: bash
         run: |
-          if git diff --quiet -- public/data/events.json; then
+          if git diff --quiet -- public/data/events.json data/geocode_cache.json; then
             echo "대회 데이터 변경이 없습니다."
             exit 0
           fi
           git config user.name "park-golf-finder bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/events.json
+          git add public/data/events.json data/geocode_cache.json
           git commit -m "data: 대회 정보 자동 갱신"
           git push

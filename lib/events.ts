@@ -29,6 +29,12 @@ export type EventItem = {
   region: string;
   city: string | null;
   venue: string;
+  venue_location: {
+    latitude: number;
+    longitude: number;
+    matched_address: string;
+    accuracy: 'address' | 'locality';
+  } | null;
   event_start: string;
   event_end: string;
   preliminary_dates: string[];

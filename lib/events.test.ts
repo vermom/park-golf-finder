@@ -8,6 +8,7 @@ const event = (overrides: Partial<EventItem> = {}): EventItem => ({
   region: '경북',
   city: '경주시',
   venue: '경주파크골프장',
+  venue_location: { latitude: 35.856, longitude: 129.224, matched_address: '경주시', accuracy: 'locality' },
   event_start: '2026-10-10',
   event_end: '2026-10-11',
   preliminary_dates: [],
@@ -72,4 +73,3 @@ describe('신청 일정 충돌', () => {
     expect(conflicts.get('two')).toEqual(['경주 테스트 대회']);
   });
 });
-
