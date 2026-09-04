@@ -1,0 +1,72 @@
+name: GitHub Pages 배포
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_run:
+    workflows: [대회 데이터 자동수집]
+    types: [completed]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 받기
+        uses: actions/checkout@v7
+
+      - name: Node.js 준비
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Python 준비
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: 설치
+        run: |
+          npm ci
+          pip install -r requirements.txt
+
+      - name: 테스트와 데이터 검증
+        run: |
+          npm test
+          npm run lint
+          pytest -q
+          python scripts/validate_data.py
+
+      - name: 정적 홈페이지 만들기
+        run: npm run build
+
+      - name: Pages 설정
+        uses: actions/configure-pages@v6
+
+      - name: 배포 파일 올리기
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist/client
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: GitHub Pages 배포
+        id: deployment
+        uses: actions/deploy-pages@v5

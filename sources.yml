@@ -1,0 +1,188 @@
+version: 1
+timezone: Asia/Seoul
+
+# 2026-09-04 실제 웹 검색으로 확인한 공식·공공 출처입니다.
+# selector가 안정적으로 확인된 출처만 auto로 두며, 로그인·캡차·이미지 공고 중심
+# 출처는 우회하지 않고 manual_required로 기록합니다.
+sources:
+  - id: kpga_national
+    name: 대한파크골프협회 대회·행사 일정
+    region: 전국
+    category: national_association
+    mode: auto
+    collector: kpga
+    url: https://www.kpga7330.com/competitions
+    api_url: https://www.kpga7330.com/api/competitions
+    official: true
+    notes: 공개 JSON 목록과 상세 API를 사용하며 로그인·우회가 필요하지 않습니다.
+
+  - id: kpgf_national
+    name: 대한파크골프연맹 공지사항
+    region: 전국
+    category: national_federation
+    mode: manual_required
+    url: https://www.kpgf.kr/board/index.html?id=notices
+    official: true
+    notes: 대회 요강이 이미지 중심이라 자동 OCR 대신 수동 등록합니다.
+
+  - id: seoul_association
+    name: 서울특별시체육회 파크골프 종목단체
+    region: 서울
+    category: provincial_association
+    mode: manual_required
+    url: https://www.seoulsports.or.kr/home/homeIndexOrg.do?menuCode=parkgolf
+    official: true
+    notes: 별도 안정적 대회 피드가 확인되지 않아 수동 확인합니다.
+
+  - id: busan_association
+    name: 부산광역시파크골프협회
+    region: 부산
+    category: provincial_association
+    mode: manual_required
+    url: https://www.bpga.or.kr/
+    official: true
+    notes: 부산광역시 공식 안내에서 협회 홈페이지로 확인했습니다.
+
+  - id: daegu_city
+    name: 대구광역시 파크골프 예약 공지
+    region: 대구
+    category: local_government
+    mode: manual_required
+    url: https://dgpg.daegu.go.kr/parkgolf/notice
+    official: true
+    notes: 시설 예약 공지 중심이며 대회 공고는 수동 확인합니다.
+
+  - id: incheon_city
+    name: 인천광역시 온라인통합예약
+    region: 인천
+    category: local_government
+    mode: manual_required
+    url: https://www.incheon.go.kr/res/index
+    official: true
+    notes: 통합예약에서 파크골프 관련 모집을 키워드로 수동 확인합니다.
+
+  - id: gwangju_donggu_sports
+    name: 광주광역시 동구체육회 종목단체 행사
+    region: 광주
+    category: local_sports_council
+    mode: manual_required
+    url: https://donggusports.kr/?page=2&sid=18
+    official: true
+    notes: 구 체육회 게시판 구조가 변경될 수 있어 수동 확인합니다.
+
+  - id: daejeon_association
+    name: 대전광역시파크골프협회 전국대회정보
+    region: 대전
+    category: provincial_association
+    mode: manual_required
+    url: https://djpkgolf.kr/34
+    official: true
+    notes: 게시물 상세가 첨부·회원 흐름과 섞여 있어 수동 확인합니다.
+
+  - id: ulsan_facility
+    name: 울산시설공단 울산대공원 파크골프장
+    region: 울산
+    category: facility_corporation
+    mode: manual_required
+    url: https://www.uic.or.kr/ulsanpark/institution/institution07.do
+    official: true
+    notes: 시설 공지에서 휴장·대회 일정을 수동 확인합니다.
+
+  - id: sejong_sports
+    name: 세종특별자치시체육회 공지사항
+    region: 세종
+    category: provincial_sports_council
+    mode: manual_required
+    url: https://sejongsc.or.kr/board/list/notice
+    official: true
+    notes: 파크골프협회 게시물을 키워드로 수동 확인합니다.
+
+  - id: gyeonggi_disabled_association
+    name: 경기도장애인골프협회 대회 일정
+    region: 경기
+    category: provincial_association
+    mode: manual_required
+    url: https://ggpga.com/
+    official: true
+    notes: 장애인 대회 범위의 공식 출처로 별도 수동 확인합니다.
+
+  - id: gangwon_association
+    name: 강원특별자치도 파크골프협회 행사일정
+    region: 강원
+    category: provincial_association
+    mode: manual_required
+    url: https://gpga7330.kr/
+    official: true
+    notes: 첨부 중심 게시판이라 수동 확인합니다.
+
+  - id: chungbuk_government
+    name: 충청북도 도정소식
+    region: 충북
+    category: local_government
+    mode: manual_required
+    url: https://www.chungbuk.go.kr/www/index.do
+    official: true
+    notes: 파크골프 대회·시설 소식을 키워드로 수동 확인합니다.
+
+  - id: chungnam_kpga_coverage
+    name: 충남 대회 확인용 대한파크골프협회 일정
+    region: 충남
+    category: provincial_association
+    mode: manual_required
+    url: https://www.kpga7330.com/competitions
+    official: true
+    notes: 별도 공개 시도협회 대회 피드가 확인되지 않아 중앙 일정과 시군 공고를 수동 대조합니다.
+
+  - id: jeonbuk_kpga_coverage
+    name: 전북 대회 확인용 대한파크골프협회 일정
+    region: 전북
+    category: provincial_association
+    mode: manual_required
+    url: https://www.kpga7330.com/competitions
+    official: true
+    notes: 별도 공개 시도협회 대회 피드가 확인되지 않아 중앙 일정과 시군 공고를 수동 대조합니다.
+
+  - id: jeonnam_association
+    name: 전라남도 파크골프협회
+    region: 전남
+    category: provincial_association
+    mode: manual_required
+    url: https://www.jnparkgolf.com/
+    official: true
+    notes: 게시판 첨부 공고를 수동 확인합니다.
+
+  - id: gyeongbuk_mungyeong
+    name: 문경시파크골프협회
+    region: 경북
+    category: city_association
+    mode: manual_required
+    url: https://mgpga.co.kr/
+    official: true
+    notes: 경북 시군구 공식 협회 대표 출처로 행사 게시물을 수동 확인합니다.
+
+  - id: gyeongnam_changwon
+    name: 창원파크골프협회
+    region: 경남
+    category: city_association
+    mode: manual_required
+    url: https://www.cwpga.co.kr/
+    official: true
+    notes: 경남 시군구 공식 협회 대표 출처로 대회 일정을 수동 확인합니다.
+
+  - id: jeju_association
+    name: 제주특별자치도 파크골프협회
+    region: 제주
+    category: provincial_association
+    mode: manual_required
+    url: https://jejupga.com/
+    official: true
+    notes: 게시판 첨부 공고를 수동 확인합니다.
+
+  - id: busan_sports_portal
+    name: 부산시 생활체육포털 대회·행사 일정
+    region: 부산
+    category: provincial_sports_council
+    mode: manual_required
+    url: https://www.busan.go.kr/sports/main/19
+    official: true
+    notes: 종목별 대회 일정과 참가 대상을 수동 확인합니다.

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/park-golf-finder/events.schema.json",
+  "title": "파크골프 대회 수집 결과",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "events"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generated_at", "timezone", "event_count", "source_statuses"],
+      "properties": {
+        "generated_at": { "type": "string", "format": "date-time" },
+        "timezone": { "const": "Asia/Seoul" },
+        "event_count": { "type": "integer", "minimum": 0 },
+        "source_statuses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name", "status", "last_checked_at", "message", "url"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "name": { "type": "string", "minLength": 1 },
+              "status": { "enum": ["success", "failed", "manual_required"] },
+              "last_checked_at": { "type": "string", "format": "date-time" },
+              "message": { "type": "string" },
+              "url": { "type": "string", "format": "uri", "pattern": "^https://" }
+            }
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/event" }
+    }
+  },
+  "$defs": {
+    "nullableString": { "type": ["string", "null"] },
+    "dateList": { "type": "array", "items": { "type": "string", "format": "date" }, "uniqueItems": true },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "name", "region", "city", "venue", "event_start", "event_end",
+        "preliminary_dates", "final_dates", "registration_start", "registration_end", "status",
+        "capacity", "eligibility", "eligibility_notes", "association_membership_required",
+        "registration_type", "competition_type", "fee", "organizer", "host", "contact",
+        "registration_method", "registration_url", "announcement_url", "announcement_date",
+        "last_checked_at", "trust_status", "source_id", "source_name", "source_type", "attachments"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 3 },
+        "name": { "type": "string", "minLength": 2 },
+        "region": { "type": "string" },
+        "city": { "$ref": "#/$defs/nullableString" },
+        "venue": { "type": "string", "minLength": 1 },
+        "event_start": { "type": "string", "format": "date" },
+        "event_end": { "type": "string", "format": "date" },
+        "preliminary_dates": { "$ref": "#/$defs/dateList" },
+        "final_dates": { "$ref": "#/$defs/dateList" },
+        "registration_start": { "type": ["string", "null"], "format": "date-time" },
+        "registration_end": { "type": ["string", "null"], "format": "date-time" },
+        "status": { "enum": ["접수 예정", "접수 중", "마감 임박", "접수 마감", "대회 종료"] },
+        "capacity": { "$ref": "#/$defs/nullableString" },
+        "eligibility": {
+          "type": "array",
+          "items": { "enum": ["대한파크골프협회 회원", "해당 지역 주민", "해당 지역 협회 회원", "클럽 단체접수", "누구나 신청 가능", "참가 자격 확인 필요"] },
+          "uniqueItems": true
+        },
+        "eligibility_notes": { "$ref": "#/$defs/nullableString" },
+        "association_membership_required": { "type": ["boolean", "null"] },
+        "registration_type": { "type": "string", "minLength": 1 },
+        "competition_type": { "type": "array", "items": { "enum": ["개인전", "단체전"] }, "uniqueItems": true },
+        "fee": { "$ref": "#/$defs/nullableString" },
+        "organizer": { "$ref": "#/$defs/nullableString" },
+        "host": { "$ref": "#/$defs/nullableString" },
+        "contact": { "$ref": "#/$defs/nullableString" },
+        "registration_method": { "$ref": "#/$defs/nullableString" },
+        "registration_url": { "type": ["string", "null"], "format": "uri", "pattern": "^(https://|$)" },
+        "announcement_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "announcement_date": { "type": ["string", "null"], "format": "date" },
+        "last_checked_at": { "type": "string", "format": "date-time" },
+        "trust_status": { "enum": ["공식 확인", "공식 공고에서 자동수집", "사람이 직접 등록", "세부 내용 확인 필요", "링크 오류 또는 접수처 확인 필요"] },
+        "source_id": { "type": "string", "minLength": 1 },
+        "source_name": { "type": "string", "minLength": 1 },
+        "source_type": { "enum": ["자동수집", "수동등록"] },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "url", "type"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+              "type": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
