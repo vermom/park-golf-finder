@@ -35,14 +35,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -215,6 +207,41 @@ function DetailRow({ label, value }: { label: string; value: React.ReactNode }) 
       <dt>{label}</dt>
       <dd>{value}</dd>
     </div>
+  );
+}
+
+function NativeDialog({
+  open,
+  onClose,
+  labelledBy,
+  describedBy,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  labelledBy: string;
+  describedBy: string;
+  children: React.ReactNode;
+}) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    if (!open && dialog.open) dialog.close();
+  }, [open]);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      className="native-dialog"
+      aria-labelledby={labelledBy}
+      aria-describedby={describedBy}
+      onClose={onClose}
+    >
+      {children}
+    </dialog>
   );
 }
 
@@ -467,14 +494,14 @@ export default function Home() {
 
   return (
     <>
-      <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
-        <DialogContent showCloseButton={false} className="max-h-[calc(100dvh-2rem)] max-w-lg overflow-y-auto rounded-3xl p-5 text-base sm:p-6">
-          <DialogHeader>
-            <DialogTitle className="pr-8 text-2xl font-black text-slate-950">내 정보 등록</DialogTitle>
-            <DialogDescription className="text-base leading-7 text-slate-600">
+      <NativeDialog open={profileOpen} onClose={() => setProfileOpen(false)} labelledBy="profile-dialog-title" describedBy="profile-dialog-description">
+        <div className="grid max-h-[calc(100dvh-2rem)] gap-4 overflow-y-auto p-5 text-base sm:p-6">
+          <div className="flex flex-col gap-2">
+            <h2 id="profile-dialog-title" className="pr-8 text-2xl font-black text-slate-950">내 정보 등록</h2>
+            <p id="profile-dialog-description" className="text-base leading-7 text-slate-600">
               참가 조건을 확인할 때 참고할 정보입니다. 이 기기의 브라우저에만 저장되고 접수처로 자동 전송되지 않습니다.
-            </DialogDescription>
-          </DialogHeader>
+            </p>
+          </div>
 
           <div className="grid gap-4 py-1">
             <div className="grid gap-1.5">
@@ -522,7 +549,7 @@ export default function Home() {
             {profileError && <p role="alert" className="font-bold text-rose-700">{profileError}</p>}
           </div>
 
-          <DialogFooter className="-mx-5 -mb-5 grid grid-cols-2 gap-2 rounded-b-3xl p-4 sm:-mx-6 sm:-mb-6 sm:grid-cols-[auto_1fr_1fr]">
+          <div className="-mx-5 -mb-5 grid grid-cols-2 gap-2 rounded-b-3xl border-t bg-slate-50 p-4 sm:-mx-6 sm:-mb-6 sm:grid-cols-[auto_1fr_1fr]">
             <Button type="button" variant="destructive" size="lg" className="h-12 text-base font-black" disabled={!hasProfile(profile)} onClick={deleteProfile}>
               <Trash2 aria-hidden="true" /> 삭제
             </Button>
@@ -530,17 +557,17 @@ export default function Home() {
             <Button type="button" size="lg" className="col-span-2 h-12 text-base font-black sm:col-span-1" onClick={saveProfile}>
               <Save aria-hidden="true" /> 저장
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        </div>
+      </NativeDialog>
 
-      <Dialog open={installHelpOpen} onOpenChange={setInstallHelpOpen}>
-        <DialogContent showCloseButton={false} className="max-w-md rounded-3xl p-5 text-base sm:p-6">
-          <DialogHeader>
+      <NativeDialog open={installHelpOpen} onClose={() => setInstallHelpOpen(false)} labelledBy="install-dialog-title" describedBy="install-dialog-description">
+        <div className="grid gap-4 p-5 text-base sm:p-6">
+          <div className="flex flex-col gap-2">
             <span className="mb-1 grid size-14 place-items-center rounded-2xl bg-emerald-700 text-white"><Smartphone className="size-7" aria-hidden="true" /></span>
-            <DialogTitle className="text-2xl font-black text-slate-950">휴대폰에 앱 설치하기</DialogTitle>
-            <DialogDescription className="text-base leading-7 text-slate-600">설치비 없이 홈 화면에서 앱처럼 바로 열 수 있어요.</DialogDescription>
-          </DialogHeader>
+            <h2 id="install-dialog-title" className="text-2xl font-black text-slate-950">휴대폰에 앱 설치하기</h2>
+            <p id="install-dialog-description" className="text-base leading-7 text-slate-600">설치비 없이 홈 화면에서 앱처럼 바로 열 수 있어요.</p>
+          </div>
           {isIos ? (
             <ol className="grid gap-3 rounded-2xl bg-emerald-50 p-4 text-base leading-7 text-slate-800">
               <li><strong>1.</strong> Safari 아래쪽의 <strong>공유 버튼</strong>을 누르세요.</li>
@@ -554,11 +581,11 @@ export default function Home() {
               <li><strong>3.</strong> <strong>설치</strong>를 누르세요.</li>
             </ol>
           )}
-          <DialogFooter className="-mx-5 -mb-5 rounded-b-3xl p-4 sm:-mx-6 sm:-mb-6">
+          <div className="-mx-5 -mb-5 rounded-b-3xl border-t bg-slate-50 p-4 sm:-mx-6 sm:-mb-6">
             <Button type="button" size="lg" className="h-12 w-full text-base font-black" onClick={() => setInstallHelpOpen(false)}>확인</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        </div>
+      </NativeDialog>
 
       <main className="min-h-screen bg-background text-foreground">
       <header className="scoreboard-band">
