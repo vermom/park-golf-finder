@@ -265,6 +265,7 @@ export default function Home() {
   const [isInstalled, setIsInstalled] = useState(false);
   const [installBrowser, setInstallBrowser] = useState<InstallBrowser>('other');
   const [chromeOpenUrl, setChromeOpenUrl] = useState('');
+  const [isInstallContinuation, setIsInstallContinuation] = useState(false);
   const requestedRouteKeys = useRef(new Set<string>());
 
   /* oxlint-disable react/react-compiler -- 브라우저 저장값과 외부 JSON을 최초 1회 동기화합니다. */
@@ -308,15 +309,22 @@ export default function Home() {
         || Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
       const browser = detectInstallBrowser(navigator.userAgent, navigator.maxTouchPoints);
       const mobile = browser !== 'other';
+      const installContinuation = new URLSearchParams(window.location.search).get('install') === '1';
       setIsInstalled(standalone);
       setInstallBrowser(browser);
       setChromeOpenUrl(browser === 'samsung' ? (buildChromeIntentUrl(window.location.href) ?? '') : '');
+      setIsInstallContinuation(installContinuation);
       if (standalone || !mobile) return;
       try {
-        if (sessionStorage.getItem(INSTALL_GUIDE_SESSION_KEY)) return;
+        if (!installContinuation && sessionStorage.getItem(INSTALL_GUIDE_SESSION_KEY)) return;
         sessionStorage.setItem(INSTALL_GUIDE_SESSION_KEY, '1');
       } catch {
         // 저장 기능이 막힌 브라우저에서도 설치 안내는 한 번 표시합니다.
+      }
+      if (installContinuation) {
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete('install');
+        window.history.replaceState(null, '', cleanUrl);
       }
       installGuideTimer = window.setTimeout(() => setInstallHelpOpen(true), 900);
     };
@@ -617,32 +625,36 @@ export default function Home() {
               {installBrowser === 'samsung' ? <ShieldCheck className="size-7" aria-hidden="true" /> : <Smartphone className="size-7" aria-hidden="true" />}
             </span>
             <h2 id="install-dialog-title" className="text-2xl font-black text-slate-950">
-              {installBrowser === 'samsung' ? '삼성 인터넷에서는 설치하지 마세요' : '휴대폰에 앱 설치하기'}
+              {installBrowser === 'samsung' ? '휴대폰 홈 화면에 설치하기' : '휴대폰에 앱 설치하기'}
             </h2>
             <p id="install-dialog-description" className="text-base leading-7 text-slate-600">
-              {installBrowser === 'samsung' ? '사진과 같은 보안 경고가 뜨지 않도록 안전한 사용 방법을 안내해 드려요.' : '설치비 없이 홈 화면에서 앱처럼 바로 열 수 있어요.'}
+              {installBrowser === 'samsung' ? 'Chrome은 설치할 때 한 번만 열고, 설치 후에는 홈 화면 아이콘으로 바로 실행해요.' : '설치비 없이 홈 화면에서 앱처럼 바로 열 수 있어요.'}
             </p>
           </div>
           {installBrowser === 'samsung' ? (
             <div className="grid gap-3 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4">
-              <p className="text-lg font-black leading-8 text-amber-950">경고가 보이면 ‘무시하고 설치하기’는 누르지 말고 파란색 ‘확인’을 눌러 닫으세요.</p>
-              <p className="leading-7 text-slate-700">삼성 인터넷의 웹앱 설치 방식에서 생기는 경고입니다. 아래 버튼으로 Chrome에서 다시 열면 안전한 설치 안내를 받을 수 있어요.</p>
+              <ol className="install-steps">
+                <li><span>1</span><div>아래의 <strong>Chrome에서 설치 계속</strong>을 누르세요.</div></li>
+                <li><span>2</span><div>Chrome에서 <strong>휴대폰에 앱 설치</strong>를 누르세요.</div></li>
+                <li><span>3</span><div>설치가 끝나면 홈 화면의 <strong>파크골프 대회</strong> 아이콘을 누르세요.</div></li>
+              </ol>
               {chromeOpenUrl && (
                 <a href={chromeOpenUrl} className={buttonVariants({ size: 'lg', className: 'h-16 w-full text-xl font-black' })}>
-                  <ExternalLink className="size-6" aria-hidden="true" /> Chrome에서 열기
+                  <ExternalLink className="size-6" aria-hidden="true" /> Chrome에서 설치 계속
                 </a>
               )}
-              <Button type="button" variant="outline" size="lg" className="h-14 w-full bg-white text-lg font-black" onClick={() => setInstallHelpOpen(false)}>
-                설치 없이 홈페이지 사용하기
-              </Button>
-              <p className="text-sm font-semibold leading-6 text-slate-600">Chrome이 열리지 않으면 삼성 인터넷 메뉴의 ‘다른 앱에서 열기’에서 Chrome을 선택해 주세요.</p>
+              <p className="rounded-xl bg-white p-3 text-base font-bold leading-7 text-emerald-950">설치 후에는 Chrome에 다시 들어갈 필요가 없어요. 일반 앱처럼 홈 화면 아이콘만 누르면 됩니다.</p>
+              <p className="text-sm font-semibold leading-6 text-slate-600">이전에 보인 보안 경고에서는 ‘무시하고 설치하기’를 누르지 말고 ‘확인’으로 닫아 주세요.</p>
             </div>
           ) : installPrompt ? (
             <div className="grid gap-3 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-4 text-center">
-              <p className="text-lg font-black leading-8 text-emerald-950">아래 버튼을 누르고<br />다음 화면에서 ‘설치’만 누르세요.</p>
+              <p className="text-lg font-black leading-8 text-emerald-950">
+                {isInstallContinuation ? '이제 마지막 단계예요.' : '아래 버튼을 누르세요.'}<br />다음 화면에서 ‘설치’만 누르면 됩니다.
+              </p>
               <Button type="button" size="lg" className="h-16 w-full text-xl font-black" onClick={() => void startInstall()}>
-                <Download className="size-6" aria-hidden="true" /> 지금 설치하기
+                <Download className="size-6" aria-hidden="true" /> 휴대폰에 앱 설치
               </Button>
+              <p className="text-base font-bold leading-7 text-emerald-950">설치 후에는 홈 화면의 ‘파크골프 대회’ 아이콘으로 바로 실행됩니다.</p>
             </div>
           ) : installBrowser === 'ios' ? (
             <ol className="install-steps">
@@ -660,7 +672,7 @@ export default function Home() {
           {!installPrompt && installBrowser !== 'ios' && installBrowser !== 'samsung' && <p className="rounded-xl bg-amber-50 p-3 font-bold leading-7 text-amber-950">카카오톡 안에서 열었다면 먼저 점 3개 메뉴에서 ‘다른 브라우저로 열기’를 눌러주세요.</p>}
           <div className="-mx-5 -mb-5 rounded-b-3xl border-t bg-slate-50 p-4 sm:-mx-6 sm:-mb-6">
             <Button type="button" variant="outline" size="lg" className="h-14 w-full text-lg font-black" onClick={() => setInstallHelpOpen(false)}>
-              {installBrowser === 'samsung' ? '안내 닫기' : '나중에 하기'}
+              {installBrowser === 'samsung' ? '취소' : '나중에 하기'}
             </Button>
           </div>
         </div>
@@ -679,7 +691,7 @@ export default function Home() {
               <UserRound aria-hidden="true" /> {hasProfile(profile) ? '내 정보 수정' : '내 정보 등록'}
             </Button>
             <Button variant="outline" size="lg" className="h-12 border-white/70 bg-emerald-950/35 px-4 text-base font-black text-white hover:bg-emerald-950/55 hover:text-white" onClick={() => void startInstall()} disabled={isInstalled}>
-              {isInstalled ? <CheckCircle2 aria-hidden="true" /> : <Download aria-hidden="true" />} {isInstalled ? '앱 설치됨' : installBrowser === 'samsung' ? '안전한 설치 안내' : '앱 설치'}
+              {isInstalled ? <CheckCircle2 aria-hidden="true" /> : <Download aria-hidden="true" />} {isInstalled ? '앱 설치됨' : '홈 화면에 설치'}
             </Button>
           </div>
         </div>

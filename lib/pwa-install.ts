@@ -16,6 +16,10 @@ export function buildChromeIntentUrl(pageUrl: string) {
   try {
     const url = new URL(pageUrl);
     if (url.protocol !== 'https:') return null;
+    url.searchParams.delete('updated');
+    url.searchParams.delete('verify');
+    url.searchParams.set('install', '1');
+    url.hash = '';
     const fallback = encodeURIComponent(url.href);
     return `intent://${url.host}${url.pathname}${url.search}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${fallback};end`;
   } catch {

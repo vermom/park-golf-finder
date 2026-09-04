@@ -20,10 +20,12 @@ describe('브라우저별 안전한 설치 안내', () => {
   });
 
   it('Chrome 열기 주소는 공식 HTTPS 페이지만 전달하고 실패하면 안전하게 중단한다', () => {
-    const intent = buildChromeIntentUrl('https://vermom.github.io/park-golf-finder/?view=all');
+    const intent = buildChromeIntentUrl('https://vermom.github.io/park-golf-finder/?view=all&updated=old#events');
     expect(intent).toContain('package=com.android.chrome');
-    expect(intent).toContain('intent://vermom.github.io/park-golf-finder/?view=all');
-    expect(intent).toContain(encodeURIComponent('https://vermom.github.io/park-golf-finder/?view=all'));
+    expect(intent).toContain('intent://vermom.github.io/park-golf-finder/?view=all&install=1');
+    expect(intent).toContain(encodeURIComponent('https://vermom.github.io/park-golf-finder/?view=all&install=1'));
+    expect(intent).not.toContain('updated=old');
+    expect(intent).not.toContain('#events');
     expect(buildChromeIntentUrl('http://localhost:3001/')).toBeNull();
     expect(buildChromeIntentUrl('not-a-url')).toBeNull();
   });
