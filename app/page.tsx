@@ -505,16 +505,16 @@ export default function Home() {
 
           <div className="grid gap-4 py-1">
             <div className="grid gap-1.5">
-              <span className="text-base font-black text-slate-800">주로 활동하는 시·도 <span className="text-rose-700">필수</span></span>
-              <Select value={profileDraft.region || 'none'} onValueChange={(value) => setProfileDraft({ ...profileDraft, region: value === 'none' || value === null ? '' : String(value) })}>
-                <SelectTrigger aria-label="주로 활동하는 시도" className="h-13 w-full rounded-xl border-slate-300 bg-white px-3 text-base">
-                  <SelectValue>{profileDraft.region || '시·도를 선택하세요'}</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">시·도를 선택하세요</SelectItem>
-                  {PROFILE_REGIONS.map((region) => <SelectItem key={region} value={region}>{region}</SelectItem>)}
-                </SelectContent>
-              </Select>
+              <label htmlFor="profile-region" className="text-base font-black text-slate-800">주로 활동하는 시·도 <span className="text-rose-700">필수</span></label>
+              <select
+                id="profile-region"
+                className="profile-select"
+                value={profileDraft.region}
+                onChange={(event) => setProfileDraft({ ...profileDraft, region: event.target.value })}
+              >
+                <option value="">시·도를 선택하세요</option>
+                {PROFILE_REGIONS.map((region) => <option key={region} value={region}>{region}</option>)}
+              </select>
             </div>
 
             <label htmlFor="profile-city" className="grid gap-1.5 text-base font-black text-slate-800">
@@ -528,18 +528,18 @@ export default function Home() {
             </label>
 
             <div className="grid gap-1.5">
-              <span className="text-base font-black text-slate-800">대한파크골프협회 회원 여부 <span className="font-normal text-slate-500">선택</span></span>
-              <Select value={profileDraft.membership || 'unset'} onValueChange={(value) => setProfileDraft({ ...profileDraft, membership: value === 'unset' || value === null ? '' : value as MembershipStatus })}>
-                <SelectTrigger aria-label="대한파크골프협회 회원 여부" className="h-13 w-full rounded-xl border-slate-300 bg-white px-3 text-base">
-                  <SelectValue>{profileDraft.membership === 'member' ? '회원' : profileDraft.membership === 'not-member' ? '비회원' : profileDraft.membership === 'unknown' ? '잘 모르겠어요' : '선택하지 않음'}</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="unset">선택하지 않음</SelectItem>
-                  <SelectItem value="member">회원</SelectItem>
-                  <SelectItem value="not-member">비회원</SelectItem>
-                  <SelectItem value="unknown">잘 모르겠어요</SelectItem>
-                </SelectContent>
-              </Select>
+              <label htmlFor="profile-membership" className="text-base font-black text-slate-800">대한파크골프협회 회원 여부 <span className="font-normal text-slate-500">선택</span></label>
+              <select
+                id="profile-membership"
+                className="profile-select"
+                value={profileDraft.membership}
+                onChange={(event) => setProfileDraft({ ...profileDraft, membership: event.target.value as MembershipStatus })}
+              >
+                <option value="">선택하지 않음</option>
+                <option value="member">회원</option>
+                <option value="not-member">비회원</option>
+                <option value="unknown">잘 모르겠어요</option>
+              </select>
             </div>
 
             <div className="flex gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-base leading-7 text-sky-950">
