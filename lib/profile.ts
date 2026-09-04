@@ -25,6 +25,7 @@ export type LocalProfile = {
   city: string;
   club: string;
   membership: MembershipStatus;
+  membershipNumber: string;
 };
 
 export const EMPTY_PROFILE: LocalProfile = {
@@ -32,6 +33,7 @@ export const EMPTY_PROFILE: LocalProfile = {
   city: '',
   club: '',
   membership: '',
+  membershipNumber: '',
 };
 
 function cleanText(value: unknown, maxLength = 40) {
@@ -43,18 +45,20 @@ export function normalizeProfile(value: unknown): LocalProfile {
   const source = value as Partial<Record<keyof LocalProfile, unknown>>;
   const region = cleanText(source.region, 10);
   const membership = cleanText(source.membership, 20);
+  const normalizedMembership = ['member', 'not-member', 'unknown'].includes(membership)
+    ? membership as MembershipStatus
+    : '';
   return {
     region: PROFILE_REGIONS.includes(region as (typeof PROFILE_REGIONS)[number]) ? region : '',
     city: cleanText(source.city),
     club: cleanText(source.club),
-    membership: ['member', 'not-member', 'unknown'].includes(membership)
-      ? membership as MembershipStatus
-      : '',
+    membership: normalizedMembership,
+    membershipNumber: normalizedMembership === 'member' ? cleanText(source.membershipNumber, 30) : '',
   };
 }
 
 export function hasProfile(profile: LocalProfile) {
-  return Boolean(profile.region || profile.city || profile.club || profile.membership);
+  return Boolean(profile.region || profile.city || profile.club || profile.membership || profile.membershipNumber);
 }
 
 export function membershipLabel(status: MembershipStatus) {

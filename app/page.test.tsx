@@ -9,6 +9,7 @@ describe('내 정보 선택창 호환성', () => {
     expect(markup).toContain('<dialog');
     expect(markup).toContain('<select id="profile-region"');
     expect(markup).toContain('<select id="profile-membership"');
+    expect(markup).not.toContain('id="profile-membership-number"');
   });
 
   it('대화상자 밖의 기존 대회 필터 선택창은 그대로 유지한다', () => {

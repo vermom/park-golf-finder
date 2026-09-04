@@ -533,7 +533,14 @@ export default function Home() {
                 id="profile-membership"
                 className="profile-select"
                 value={profileDraft.membership}
-                onChange={(event) => setProfileDraft({ ...profileDraft, membership: event.target.value as MembershipStatus })}
+                onChange={(event) => {
+                  const membership = event.target.value as MembershipStatus;
+                  setProfileDraft({
+                    ...profileDraft,
+                    membership,
+                    membershipNumber: membership === 'member' ? profileDraft.membershipNumber : '',
+                  });
+                }}
               >
                 <option value="">선택하지 않음</option>
                 <option value="member">회원</option>
@@ -542,9 +549,29 @@ export default function Home() {
               </select>
             </div>
 
+            {profileDraft.membership === 'member' && (
+              <label htmlFor="profile-membership-number" className="grid gap-1.5 text-base font-black text-slate-800">
+                대한파크골프협회 회원번호 <span className="font-normal text-slate-500">선택</span>
+                <Input
+                  id="profile-membership-number"
+                  type="text"
+                  inputMode="text"
+                  autoComplete="off"
+                  spellCheck={false}
+                  maxLength={30}
+                  className="h-13 rounded-xl bg-white text-base md:text-base"
+                  value={profileDraft.membershipNumber}
+                  onChange={(event) => setProfileDraft({ ...profileDraft, membershipNumber: event.target.value })}
+                  placeholder="예: 1234-5678"
+                  aria-describedby="membership-number-help"
+                />
+                <span id="membership-number-help" className="text-sm font-normal leading-6 text-slate-500">접수할 때 확인하기 위한 메모이며 이 기기에만 저장됩니다.</span>
+              </label>
+            )}
+
             <div className="flex gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-base leading-7 text-sky-950">
               <ShieldCheck className="mt-1 size-6 shrink-0" aria-hidden="true" />
-              <p><strong>이름·전화번호·상세주소는 받지 않아요.</strong><br />공용 기기에서는 다른 사람이 볼 수 있으므로 저장하지 마세요.</p>
+              <p><strong>회원번호를 포함한 내 정보는 외부로 전송되지 않아요.</strong><br />브라우저 저장값은 암호화되지 않으므로 공용 기기에서는 저장하지 마세요.</p>
             </div>
             {profileError && <p role="alert" className="font-bold text-rose-700">{profileError}</p>}
           </div>
@@ -778,6 +805,7 @@ export default function Home() {
                         <summary><UserRound aria-hidden="true" />신청할 때 내 정보 보기</summary>
                         <div className="my-info-content">
                           <p className="font-bold text-slate-800">{profileSummary(profile)}</p>
+                          {profile.membershipNumber && <p className="mt-2 break-all text-base font-black text-emerald-950">협회 회원번호: {profile.membershipNumber}</p>}
                           <p className="mt-1 text-sm text-slate-600">이 기기에만 표시되며 접수 페이지로 자동 전달되지 않아요.</p>
                           <Button type="button" variant="link" className="mt-1 h-10 px-0 text-base font-black text-emerald-800" onClick={openProfileEditor}>내 정보 수정</Button>
                         </div>
