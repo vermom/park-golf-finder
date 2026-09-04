@@ -122,7 +122,7 @@ export function sortEvents(events: EventItem[], sort: 'event' | 'registration') 
       const registrationOrder = aEnd.localeCompare(bEnd);
       if (registrationOrder) return registrationOrder;
     }
-    return a.event_start.localeCompare(b.event_start) || a.name.localeCompare(b.name, 'ko');
+    return b.event_start.localeCompare(a.event_start) || a.name.localeCompare(b.name, 'ko');
   });
 }
 

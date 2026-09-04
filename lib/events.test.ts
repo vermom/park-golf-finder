@@ -63,6 +63,14 @@ describe('검색·필터·정렬', () => {
   it('경주 우선 지역을 먼저 정렬한다', () => {
     expect(sortEvents(events, 'event')[0].id).toBe('one');
   });
+
+  it('같은 우선 지역에서는 개최일이 가장 최신인 대회를 먼저 정렬한다', () => {
+    const nearbyEvents = [
+      event({ id: 'early', event_start: '2026-09-20', event_end: '2026-09-20' }),
+      event({ id: 'latest', event_start: '2026-11-08', event_end: '2026-11-10' }),
+    ];
+    expect(sortEvents(nearbyEvents, 'event').map((item) => item.id)).toEqual(['latest', 'early']);
+  });
 });
 
 describe('신청 일정 충돌', () => {

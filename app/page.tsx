@@ -407,9 +407,9 @@ export default function Home() {
             <div className="grid gap-1.5">
               <span className="text-sm font-bold text-slate-700">정렬</span>
               <Select value={sort} onValueChange={(value) => value && setSort(value as 'event' | 'registration')}>
-                <SelectTrigger aria-label="정렬" className="h-12 w-full rounded-xl border-slate-300 bg-white px-3 text-base"><SelectValue>{sort === 'event' ? '개최일순' : '접수 마감일순'}</SelectValue></SelectTrigger>
+                <SelectTrigger aria-label="정렬" className="h-12 w-full rounded-xl border-slate-300 bg-white px-3 text-base"><SelectValue>{sort === 'event' ? '개최일 최신순' : '접수 마감일순'}</SelectValue></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="event">개최일순</SelectItem>
+                  <SelectItem value="event">개최일 최신순</SelectItem>
                   <SelectItem value="registration">접수 마감일순</SelectItem>
                 </SelectContent>
               </Select>
@@ -419,7 +419,7 @@ export default function Home() {
               인접 지역만
             </label>
           </div>
-          <p className="mt-2 text-sm text-slate-500">정렬: {sort === 'event' ? '개최일순' : '접수 마감일순'} · 모든 날짜는 한국시간 기준</p>
+          <p className="mt-2 text-sm text-slate-500">정렬: {sort === 'event' ? '개최일 최신순' : '접수 마감일순'} · 모든 날짜는 한국시간 기준</p>
         </section>
 
         <div className="mx-auto mb-4 flex w-full min-w-0 max-w-4xl flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
