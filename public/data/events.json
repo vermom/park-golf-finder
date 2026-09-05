@@ -1,15 +1,16 @@
 {
   "meta": {
-    "generated_at": "2026-09-05T20:17:04+09:00",
+    "generated_at": "2026-09-05T21:31:31+09:00",
     "timezone": "Asia/Seoul",
-    "event_count": 49,
-    "notice_count": 19,
+    "event_count": 58,
+    "notice_count": 5,
+    "matched_notice_count": 14,
     "source_statuses": [
       {
         "id": "kpga_national",
         "name": "대한파크골프협회 대회·행사 일정",
         "status": "success",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "공식 대회 30건 수집",
         "url": "https://www.kpga7330.com/competitions"
       },
@@ -17,15 +18,15 @@
         "id": "kpgf_national",
         "name": "대한파크골프연맹 공지사항",
         "status": "success",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
-        "message": "공식 대회 공고 후보 5건 발견",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
+        "message": "공식 공고 5건 중 대회 카드 1건 자동변환, 세부 확인 4건",
         "url": "https://kpgf.kr/m/board/index.html?id=notices"
       },
       {
         "id": "seoul_association",
         "name": "서울특별시체육회 파크골프 종목단체",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "별도 안정적 대회 피드가 확인되지 않아 수동 확인합니다.",
         "url": "https://www.seoulsports.or.kr/home/homeIndexOrg.do?menuCode=parkgolf"
       },
@@ -33,7 +34,7 @@
         "id": "busan_association",
         "name": "부산광역시파크골프협회",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "부산광역시 공식 안내에서 협회 홈페이지로 확인했습니다.",
         "url": "https://www.bpga.or.kr/"
       },
@@ -41,7 +42,7 @@
         "id": "daegu_city",
         "name": "대구광역시 파크골프 예약 공지",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "시설 예약 공지 중심이며 대회 공고는 수동 확인합니다.",
         "url": "https://dgpg.daegu.go.kr/parkgolf/notice"
       },
@@ -49,7 +50,7 @@
         "id": "incheon_city",
         "name": "인천광역시 온라인통합예약",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "통합예약에서 파크골프 관련 모집을 키워드로 수동 확인합니다.",
         "url": "https://www.incheon.go.kr/res/index"
       },
@@ -57,7 +58,7 @@
         "id": "gwangju_donggu_sports",
         "name": "광주광역시 동구체육회 종목단체 행사",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "구 체육회 게시판 구조가 변경될 수 있어 수동 확인합니다.",
         "url": "https://donggusports.kr/?page=2&sid=18"
       },
@@ -65,7 +66,7 @@
         "id": "daejeon_association",
         "name": "대전광역시파크골프협회 전국대회정보",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "게시물 상세가 첨부·회원 흐름과 섞여 있어 수동 확인합니다.",
         "url": "https://djpkgolf.kr/34"
       },
@@ -73,7 +74,7 @@
         "id": "ulsan_facility",
         "name": "울산시설공단 울산대공원 파크골프장",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "시설 공지에서 휴장·대회 일정을 수동 확인합니다.",
         "url": "https://www.uic.or.kr/ulsanpark/institution/institution07.do"
       },
@@ -81,7 +82,7 @@
         "id": "sejong_sports",
         "name": "세종특별자치시체육회 공지사항",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "파크골프협회 게시물을 키워드로 수동 확인합니다.",
         "url": "https://sejongsc.or.kr/board/list/notice"
       },
@@ -89,23 +90,23 @@
         "id": "gyeonggi_disabled_association",
         "name": "경기도장애인골프협회 대회 일정",
         "status": "success",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
-        "message": "공식 대회 공고 후보 1건 발견",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
+        "message": "공식 공고 1건 중 대회 카드 0건 자동변환, 세부 확인 1건",
         "url": "https://ggpga.com/"
       },
       {
         "id": "gangwon_association",
         "name": "강원특별자치도 파크골프협회 행사일정",
         "status": "success",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
-        "message": "공식 대회 공고 후보 10건 발견",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
+        "message": "공식 공고 10건 중 대회 카드 9건 자동변환, 세부 확인 1건",
         "url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1"
       },
       {
         "id": "chungbuk_government",
         "name": "충청북도 도정소식",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "파크골프 대회·시설 소식을 키워드로 수동 확인합니다.",
         "url": "https://www.chungbuk.go.kr/www/index.do"
       },
@@ -113,7 +114,7 @@
         "id": "chungnam_kpga_coverage",
         "name": "충남 대회 확인용 대한파크골프협회 일정",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "별도 공개 시도협회 대회 피드가 확인되지 않아 중앙 일정과 시군 공고를 수동 대조합니다.",
         "url": "https://www.kpga7330.com/competitions"
       },
@@ -121,7 +122,7 @@
         "id": "jeonbuk_kpga_coverage",
         "name": "전북 대회 확인용 대한파크골프협회 일정",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "별도 공개 시도협회 대회 피드가 확인되지 않아 중앙 일정과 시군 공고를 수동 대조합니다.",
         "url": "https://www.kpga7330.com/competitions"
       },
@@ -129,15 +130,15 @@
         "id": "jeonnam_association",
         "name": "전라남도 파크골프협회",
         "status": "success",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
-        "message": "공식 대회 공고 후보 2건 발견",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
+        "message": "공식 공고 2건 중 대회 카드 0건 자동변환, 세부 확인 2건",
         "url": "https://www.jnparkgolf.com/bbs/board.php?bo_table=yb_board01"
       },
       {
         "id": "gyeongbuk_mungyeong",
         "name": "문경시파크골프협회",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "경북 시군구 공식 협회 대표 출처로 행사 게시물을 수동 확인합니다.",
         "url": "https://mgpga.co.kr/"
       },
@@ -145,7 +146,7 @@
         "id": "gyeongnam_changwon",
         "name": "창원파크골프협회",
         "status": "manual_required",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "경남 시군구 공식 협회 대표 출처로 대회 일정을 수동 확인합니다.",
         "url": "https://www.cwpga.co.kr/"
       },
@@ -153,15 +154,15 @@
         "id": "jeju_association",
         "name": "제주특별자치도 파크골프협회",
         "status": "success",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
-        "message": "공식 대회 공고 후보 1건 발견",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
+        "message": "공식 공고 1건 중 대회 카드 1건 자동변환, 세부 확인 0건",
         "url": "https://jejupga.com/bbs/board.php?bo_table=event"
       },
       {
         "id": "busan_sports_portal",
         "name": "부산시 생활체육포털 대회·행사 일정",
         "status": "success",
-        "last_checked_at": "2026-09-05T20:17:04+09:00",
+        "last_checked_at": "2026-09-05T21:31:31+09:00",
         "message": "부산시 공식 대회 18건 수집 (복합종목 6건은 세부 종목 미분리로 제외)",
         "url": "https://www.busan.go.kr/sports/main/19"
       }
@@ -198,7 +199,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=157&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -235,7 +236,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=190&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -272,7 +273,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=196&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -309,7 +310,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=246&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -346,7 +347,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=251&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -384,7 +385,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=225&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -421,7 +422,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=297&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -458,7 +459,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=304&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -496,7 +497,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=288&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -533,7 +534,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=311&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -570,7 +571,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=312&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -607,7 +608,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=308&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -644,7 +645,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=314&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -682,7 +683,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/0733a2ef-eaf8-4d56-ac72-69f6171af1c9/register",
       "announcement_date": "2026-04-02",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -731,7 +732,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/20a5dfee-63cb-4db4-a682-af737c90440a/register",
       "announcement_date": "2026-04-02",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -741,6 +742,13 @@
           "name": "제2회적벽배 대회 요강.pdf",
           "url": "https://d366hz6313pnn3.cloudfront.net/uploads/events/1775117056943/1775117056943-_2__________.pdf",
           "type": "pdf"
+        }
+      ],
+      "related_announcements": [
+        {
+          "title": "제2회 화순 적벽배 전국파크골프 대회 요강을 공지 해 주시면 고맙겠습니다.",
+          "url": "https://www.jnparkgolf.com/bbs/board.php?bo_table=yb_board01&wr_id=175",
+          "source_name": "전라남도 파크골프협회"
         }
       ],
       "venue_location": {
@@ -780,7 +788,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/11054a02-9da0-45e7-8a42-4494864990ef/register",
       "announcement_date": "2026-04-02",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -829,7 +837,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/275312ce-4aca-4755-9cdc-8c592448a5cd/register",
       "announcement_date": "2026-03-26",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -878,7 +886,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/66b32f5a-8bca-4fd1-9903-1775c598f6e7/register",
       "announcement_date": "2026-04-09",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -927,7 +935,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/0156226b-7ad9-4e73-87d4-f48014e9ae1f/register",
       "announcement_date": "2026-03-26",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -975,7 +983,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=333&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -1012,7 +1020,7 @@
       "registration_url": "https://cafe.naver.com/pinkr9xt8",
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=341&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -1055,7 +1063,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/f9a04b91-6148-46ce-a1b9-03900167c48a/register",
       "announcement_date": "2026-04-09",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1103,7 +1111,7 @@
       "registration_url": "https://sasangsports.com/bbs/board.php?bo_table=event",
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=370&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -1141,7 +1149,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/b06f7ad1-d518-42ac-9f7a-157ff34feabe/register",
       "announcement_date": "2026-03-26",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1190,7 +1198,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/0e1c9ea2-e0d9-4374-8950-de647c1e42f8/register",
       "announcement_date": "2026-04-14",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1239,7 +1247,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/53aa787c-4875-4c2a-9fb1-60094c147c53/register",
       "announcement_date": "2026-03-26",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1294,7 +1302,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=350&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -1332,7 +1340,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/4133acad-e379-408b-b427-67f20310be75/register",
       "announcement_date": "2026-03-26",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1381,7 +1389,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/0297d714-4721-438c-852c-235758fb0ca4/register",
       "announcement_date": "2026-04-10",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1430,7 +1438,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/ad7be666-e0e4-4d64-8c04-c7498ebce110/register",
       "announcement_date": "2026-04-10",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1479,7 +1487,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/fe77a5eb-237f-43de-ab99-e2270b151a34/register",
       "announcement_date": "2026-04-27",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1528,7 +1536,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/82bf42dd-dfcc-43bf-8bd1-28bd5971aa62/register",
       "announcement_date": "2026-05-12",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1577,7 +1585,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/8a937c3e-b904-4774-a9b1-6ef717398048/register",
       "announcement_date": "2026-04-14",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1593,6 +1601,58 @@
         "latitude": 38.055122,
         "longitude": 127.020991,
         "matched_address": "경기도 연천군 군남면 진상리 610",
+        "accuracy": "address"
+      }
+    },
+    {
+      "id": "official-019de9debf2fdba8",
+      "name": "제4회 제주특별자치도체육회장배 전도파크골프대회",
+      "region": "제주",
+      "city": "제주시",
+      "venue": "제주생활체육공원 회천파크골프장(제주시 회천동3-21)",
+      "event_start": "2026-07-03",
+      "event_end": "2026-07-03",
+      "preliminary_dates": [],
+      "final_dates": [],
+      "registration_start": null,
+      "registration_end": "2026-06-12T23:59:59+09:00",
+      "status": "접수 예정",
+      "capacity": "664명(선수 576명,제주시협회 선수 288명,서귀포시협회 선수288명, 심판 43명. 대회운영위원 15명, 운영위원 15명, 임원 15명)",
+      "eligibility": [
+        "참가 자격 확인 필요",
+        "클럽 단체접수"
+      ],
+      "eligibility_notes": null,
+      "association_membership_required": null,
+      "registration_type": "소속 시·군 협회 단체접수",
+      "competition_type": [
+        "개인전"
+      ],
+      "fee": null,
+      "organizer": "제주특별자치파크골프협회. 제주특별자치도체육회",
+      "host": "제주특별자치도파크골프협회",
+      "contact": null,
+      "registration_method": "소속 시·군 협회 단체접수",
+      "registration_url": null,
+      "announcement_url": "https://jejupga.com/bbs/board.php?bo_table=event&wr_id=10",
+      "announcement_date": null,
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
+      "trust_status": "공식 공고에서 자동수집",
+      "source_id": "jeju_association",
+      "source_name": "제주특별자치도 파크골프협회",
+      "source_type": "자동수집",
+      "attachments": [
+        {
+          "name": "제4회제주도체육회장배 요강.pdf (191.3K)",
+          "url": "https://jejupga.com/bbs/download.php?bo_table=event&wr_id=10&no=0&nonce=07e74e6ef02a6e4cfc34|1788618701|ec91b95fa5a1c6327193cc7e3e8000d2515e4660",
+          "type": "pdf"
+        }
+      ],
+      "related_announcements": [],
+      "venue_location": {
+        "latitude": 33.472377,
+        "longitude": 126.636591,
+        "matched_address": "제주특별자치도 제주시 회천동 3-21",
         "accuracy": "address"
       }
     },
@@ -1640,7 +1700,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/b564a13b-50d7-45b2-a877-b1999d35028f/register",
       "announcement_date": "2026-07-24",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1697,7 +1757,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/db83e8f8-da9c-4d9f-8c93-e7a9dca649c5/register",
       "announcement_date": "2026-08-05",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1755,7 +1815,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/b6bb6a86-842f-49ac-a3e9-bffd7221d0f6/register",
       "announcement_date": "2026-08-10",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1784,7 +1844,20 @@
       "event_end": "2026-10-14",
       "preliminary_dates": [
         "2026-09-08",
-        "2026-09-22"
+        "2026-09-22",
+        "2026-09-09",
+        "2026-09-10",
+        "2026-09-11",
+        "2026-09-12",
+        "2026-09-13",
+        "2026-09-14",
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17",
+        "2026-09-18",
+        "2026-09-19",
+        "2026-09-20",
+        "2026-09-21"
       ],
       "final_dates": [
         "2026-10-13",
@@ -1793,7 +1866,7 @@
       "registration_start": "2026-08-18T10:00:00+09:00",
       "registration_end": "2026-08-25T18:00:00+09:00",
       "status": "접수 예정",
-      "capacity": null,
+      "capacity": "총4,212명 1) 예선전 : 3,500명(선수3,200명,임원25명, 대회본부50명,심판 25명,기록원 200명) 2) 결선전 : 712명(선수 600명, 임원10명, 대회본부 20명, 심판 82명)",
       "eligibility": [
         "대한파크골프협회 회원",
         "참가 자격 확인 필요"
@@ -1812,7 +1885,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/b7822b4a-911e-408f-91b6-cf4f4bb4c631/register",
       "announcement_date": "2026-07-20",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1822,6 +1895,18 @@
           "name": "2026년도 제1회 진주 남강유등축제배  전국파크골프대회 요강.pdf",
           "url": "https://d366hz6313pnn3.cloudfront.net/uploads/events/1784850983283/1784850983283-2026____1_________________________.pdf",
           "type": "pdf"
+        },
+        {
+          "name": "최종 2026년도 제1회 진주 유등축제배 전국파크골프대회요강수정분.hwp",
+          "url": "https://gpga7330.kr/bbs/download.php?bo_table=s3_1&wr_id=93&no=0&nonce=6bae20b2b72e70098a11|1788618700|22a921154eba0dccde63a67910212f2c59d03eca",
+          "type": "hwp"
+        }
+      ],
+      "related_announcements": [
+        {
+          "title": "제1회 진주남강유등축제배 전국파크골프대회",
+          "url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=93",
+          "source_name": "강원특별자치도 파크골프협회 행사일정"
         }
       ],
       "venue_location": {
@@ -1830,6 +1915,55 @@
         "matched_address": "경상남도 진주시 금산면 송백리 660-1",
         "accuracy": "address"
       }
+    },
+    {
+      "id": "official-c01bb075d38276a4",
+      "name": "대구시연맹 회장배 대회",
+      "region": "대구",
+      "city": null,
+      "venue": "경기장 확인 필요",
+      "event_start": "2026-09-14",
+      "event_end": "2026-09-14",
+      "preliminary_dates": [],
+      "final_dates": [],
+      "registration_start": null,
+      "registration_end": null,
+      "status": "접수 예정",
+      "capacity": null,
+      "eligibility": [
+        "참가 자격 확인 필요"
+      ],
+      "eligibility_notes": null,
+      "association_membership_required": null,
+      "registration_type": "접수 단위 확인 필요",
+      "competition_type": [],
+      "fee": null,
+      "organizer": null,
+      "host": null,
+      "contact": null,
+      "registration_method": "접수 단위 확인 필요",
+      "registration_url": null,
+      "announcement_url": "https://kpgf.kr/m/board/detail.html?id=notices&no=21",
+      "announcement_date": "2026-08-01",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
+      "trust_status": "공식 공고에서 자동수집",
+      "source_id": "kpgf_national",
+      "source_name": "대한파크골프연맹 공지사항",
+      "source_type": "자동수집",
+      "attachments": [
+        {
+          "name": "공고 이미지",
+          "url": "https://kpgf.kr/wysiwyg/PEG/se2_17860843098445.png",
+          "type": "png"
+        },
+        {
+          "name": "공고 이미지",
+          "url": "https://kpgf.kr/wysiwyg/PEG/se2_17860843142852.png",
+          "type": "png"
+        }
+      ],
+      "related_announcements": [],
+      "venue_location": null
     },
     {
       "id": "kpga-92da10e0-ce1f-4ecd-945c-dab54d206afc",
@@ -1869,7 +2003,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/92da10e0-ce1f-4ecd-945c-dab54d206afc/register",
       "announcement_date": "2026-07-24",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1922,7 +2056,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/c175314f-7404-4396-9525-aac29eff4aff/register",
       "announcement_date": "2026-07-22",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -1938,6 +2072,55 @@
         "latitude": 35.893881,
         "longitude": 127.074346,
         "matched_address": "전북 전주시 덕진구 화전동 화전신정길 20-24",
+        "accuracy": "address"
+      }
+    },
+    {
+      "id": "official-20a3ce5cb3b5a750",
+      "name": "2026 삼척시장배 강원특별자치도 파크골프대회",
+      "region": "강원",
+      "city": "삼척시",
+      "venue": "삼척시 미로파크골프장(미로면 무사리 산62-10)",
+      "event_start": "2026-09-19",
+      "event_end": "2026-09-20",
+      "preliminary_dates": [],
+      "final_dates": [],
+      "registration_start": null,
+      "registration_end": null,
+      "status": "접수 예정",
+      "capacity": "약 600명(선수 504명,대회임원 및 심판, 운영스탭,외부인사등 포함)",
+      "eligibility": [
+        "참가 자격 확인 필요"
+      ],
+      "eligibility_notes": "2026년 7월 31일까지 강원특별자치도 파크골프협회에 가입된 회원",
+      "association_membership_required": null,
+      "registration_type": "접수 단위 확인 필요",
+      "competition_type": [],
+      "fee": "선수 1인당 30,000원",
+      "organizer": "G1방송,삼척시파크골프협회.강원특별자치도파크골프협회",
+      "host": "G1방송",
+      "contact": null,
+      "registration_method": "접수 단위 확인 필요",
+      "registration_url": null,
+      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=86",
+      "announcement_date": "2026-08-19",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
+      "trust_status": "공식 공고에서 자동수집",
+      "source_id": "gangwon_association",
+      "source_name": "강원특별자치도 파크골프협회 행사일정",
+      "source_type": "자동수집",
+      "attachments": [
+        {
+          "name": "2026 삼척시장배 강원특별자치도 파크골프대회시군배포 2.hwp",
+          "url": "https://gpga7330.kr/bbs/download.php?bo_table=s3_1&wr_id=86&no=0&nonce=134bf0ca8edb56215d72|1788618700|514490471acfee5146adf391882e4f17cb77a303",
+          "type": "hwp"
+        }
+      ],
+      "related_announcements": [],
+      "venue_location": {
+        "latitude": 37.421386,
+        "longitude": 129.117246,
+        "matched_address": "강원특별자치도 삼척시 미로면 무사리 산62-10",
         "accuracy": "address"
       }
     },
@@ -1976,7 +2159,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/9ffcb702-5450-49b2-bd6e-d307892e80fe/register",
       "announcement_date": "2026-07-22",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -2027,7 +2210,7 @@
       "registration_url": "https://www.kpga7330.com/competitions/6c88538a-fd9a-40a0-854e-48c4180a6b49/register",
       "announcement_url": "https://www.kpga7330.com/competitions/6c88538a-fd9a-40a0-854e-48c4180a6b49/register",
       "announcement_date": "2026-08-26",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -2083,7 +2266,7 @@
       "registration_url": "https://www.kpga7330.com/competitions/9f9bbf7a-479d-4ddc-90fd-21a069954878/register",
       "announcement_url": "https://www.kpga7330.com/competitions/9f9bbf7a-479d-4ddc-90fd-21a069954878/register",
       "announcement_date": "2026-07-20",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -2099,6 +2282,56 @@
         "latitude": 35.571349,
         "longitude": 128.170507,
         "matched_address": "경남 합천군 합천읍 합천리 17-1",
+        "accuracy": "address"
+      }
+    },
+    {
+      "id": "official-d2b093b6600cd7f8",
+      "name": "2026 제4회 태백산배 강원특별자치도 파크골프대회",
+      "region": "강원",
+      "city": "태백시",
+      "venue": "태백시 스포츠파크 골프장 (태백시 백두대간로 179 )",
+      "event_start": "2026-10-02",
+      "event_end": "2026-10-03",
+      "preliminary_dates": [],
+      "final_dates": [],
+      "registration_start": null,
+      "registration_end": null,
+      "status": "접수 예정",
+      "capacity": "약 430여명(선수 360, 심판 및 진행요원 30, 기타 임원 등 38)",
+      "eligibility": [
+        "대한파크골프협회 회원",
+        "참가 자격 확인 필요"
+      ],
+      "eligibility_notes": "2026. 07. 31일까지 대한파크골프협회 회원으로 등록된 자",
+      "association_membership_required": true,
+      "registration_type": "접수 단위 확인 필요",
+      "competition_type": [],
+      "fee": "1인당 30,000원",
+      "organizer": "태백시파크골프협회,강원특별자치도파크골프협회",
+      "host": null,
+      "contact": null,
+      "registration_method": "접수 단위 확인 필요",
+      "registration_url": null,
+      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=92",
+      "announcement_date": "2026-08-19",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
+      "trust_status": "공식 공고에서 자동수집",
+      "source_id": "gangwon_association",
+      "source_name": "강원특별자치도 파크골프협회 행사일정",
+      "source_type": "자동수집",
+      "attachments": [
+        {
+          "name": "2026 제4회 태백산배 대회요강.hwp",
+          "url": "https://gpga7330.kr/bbs/download.php?bo_table=s3_1&wr_id=92&no=0&nonce=4808214b3feb84230d49|1788618700|7b4c2bda9bac69aabfe328d539296424d747e800",
+          "type": "hwp"
+        }
+      ],
+      "related_announcements": [],
+      "venue_location": {
+        "latitude": 37.20006,
+        "longitude": 128.974634,
+        "matched_address": "강원특별자치도 태백시 황지동 백두대간로 179",
         "accuracy": "address"
       }
     },
@@ -2123,7 +2356,7 @@
       "registration_start": "2026-09-04T09:00:00+09:00",
       "registration_end": "2026-09-08T23:59:00+09:00",
       "status": "접수 예정",
-      "capacity": null,
+      "capacity": "2,400명 (선수 2,304명, 임원 ; 20명, 심판 및 기록원 : 76명)",
       "eligibility": [
         "대한파크골프협회 회원",
         "참가 자격 확인 필요"
@@ -2134,15 +2367,15 @@
       "competition_type": [
         "개인전"
       ],
-      "fee": null,
+      "fee": "1인당 참가비 예선40,000원, 본선50,000원",
       "organizer": "고령군파크골프협회",
-      "host": null,
+      "host": "고령군체육회",
       "contact": null,
       "registration_method": "대한파크골프협회 홈페이지에서 대회 요강 확인 후 신청",
       "registration_url": "https://www.kpga7330.com/competitions/0e6ef37e-3234-411c-9cde-2aee88ab1377/register",
       "announcement_url": "https://www.kpga7330.com/competitions/0e6ef37e-3234-411c-9cde-2aee88ab1377/register",
       "announcement_date": "2026-08-21",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -2152,12 +2385,79 @@
           "name": "제3회 고령 대가야배 전국 파크골프대회 요강.pdf",
           "url": "https://d366hz6313pnn3.cloudfront.net/uploads/events/1787301332296/1787301332296-_3______________________.pdf",
           "type": "pdf"
+        },
+        {
+          "name": "제3회대가야배요강최종.hwp",
+          "url": "https://gpga7330.kr/bbs/download.php?bo_table=s3_1&wr_id=94&no=0&nonce=71640d9e2b3d5baa985d|1788618700|547d529228be8a6f38ba9b1cee009d807c38c615",
+          "type": "hwp"
+        },
+        {
+          "name": "■ 참가 접수 방법.hwp",
+          "url": "https://gpga7330.kr/bbs/download.php?bo_table=s3_1&wr_id=94&no=1&nonce=71640d9e2b3d5baa985d|1788618700|547d529228be8a6f38ba9b1cee009d807c38c615",
+          "type": "hwp"
+        }
+      ],
+      "related_announcements": [
+        {
+          "title": "제3회 고령 대가야배 전국파크골프대회",
+          "url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=94",
+          "source_name": "강원특별자치도 파크골프협회 행사일정"
         }
       ],
       "venue_location": {
         "latitude": 35.71873,
         "longitude": 128.273969,
         "matched_address": "경북 고령군 대가야읍 고아리 일량로 107",
+        "accuracy": "address"
+      }
+    },
+    {
+      "id": "official-cfb03fb287e434e1",
+      "name": "제4회 횡성한우배 강원특별자치도 파크골프대회",
+      "region": "강원",
+      "city": "횡성군",
+      "venue": "횡성파크골프장(횡성군 횡성읍 앞들동2로 45-35)",
+      "event_start": "2026-10-10",
+      "event_end": "2026-10-11",
+      "preliminary_dates": [],
+      "final_dates": [],
+      "registration_start": null,
+      "registration_end": null,
+      "status": "접수 예정",
+      "capacity": "약 550명(선수 432명, 심판 60명, 임원/진행요원 30명, 기타 28명)",
+      "eligibility": [
+        "해당 지역 협회 회원",
+        "참가 자격 확인 필요"
+      ],
+      "eligibility_notes": "2026.6.30. 까지 강원특별자치도파크골프협회에 가입된 회원",
+      "association_membership_required": null,
+      "registration_type": "접수 단위 확인 필요",
+      "competition_type": [],
+      "fee": "선수 1인 30,000원",
+      "organizer": "횡성군파크골프협회, 강원특별자치도파크골프협회",
+      "host": "횡성군체육회",
+      "contact": null,
+      "registration_method": "접수 단위 확인 필요",
+      "registration_url": null,
+      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=87",
+      "announcement_date": "2026-08-19",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
+      "trust_status": "공식 공고에서 자동수집",
+      "source_id": "gangwon_association",
+      "source_name": "강원특별자치도 파크골프협회 행사일정",
+      "source_type": "자동수집",
+      "attachments": [
+        {
+          "name": "제4회 횡성한우배 강원특별자치도 파크골프대회 요강.hwpx",
+          "url": "https://gpga7330.kr/bbs/download.php?bo_table=s3_1&wr_id=87&no=0&nonce=860d65be8cbfd020d530|1788618700|4b5e417178d72d8c9ad737286dd9e804e2fb5ce1",
+          "type": "hwpx"
+        }
+      ],
+      "related_announcements": [],
+      "venue_location": {
+        "latitude": 37.482933,
+        "longitude": 127.989499,
+        "matched_address": "강원특별자치도 횡성군 횡성읍 읍상리 앞들동2로 45-35",
         "accuracy": "address"
       }
     },
@@ -2190,7 +2490,7 @@
       "registration_url": null,
       "announcement_url": "https://www.busan.go.kr/sports/main/19?action=view&no=205&typ=c",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "busan_sports_portal",
       "source_name": "부산시 생활체육포털 대회·행사 일정",
@@ -2244,8 +2544,15 @@
           "type": "png"
         }
       ],
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "source_type": "수동등록",
+      "related_announcements": [
+        {
+          "title": "★ 제1회 우리육우 전국파크골프대회 대회요강(참가자 모집중, ~2026.09.04 17시) ★",
+          "url": "https://kpgf.kr/m/board/detail.html?id=notices&no=24",
+          "source_name": "대한파크골프연맹 공지사항"
+        }
+      ],
       "venue_location": {
         "latitude": 35.88233,
         "longitude": 128.509594,
@@ -2286,7 +2593,7 @@
       "registration_url": null,
       "announcement_url": "https://www.kpga7330.com/competitions/41b69b51-f5b8-4756-b7c1-0c8bfb820cea/register",
       "announcement_date": "2026-08-21",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -2302,6 +2609,57 @@
         "latitude": 35.867036,
         "longitude": 128.466481,
         "matched_address": "대구 달성군 다사읍 매곡리 354-1",
+        "accuracy": "address"
+      }
+    },
+    {
+      "id": "official-f2c69b09e6cedbe1",
+      "name": "제5회 양양송이배 강원특별자치도파크골프대회",
+      "region": "강원",
+      "city": "양양군",
+      "venue": "양양남대천파크골프장(양양군 양양읍 송암리 540)",
+      "event_start": "2026-10-17",
+      "event_end": "2026-10-17",
+      "preliminary_dates": [],
+      "final_dates": [],
+      "registration_start": null,
+      "registration_end": null,
+      "status": "접수 예정",
+      "capacity": "430명(선수 340명, 심판 42, 운영 20, 내빈 28)",
+      "eligibility": [
+        "해당 지역 협회 회원",
+        "대한파크골프협회 회원",
+        "참가 자격 확인 필요"
+      ],
+      "eligibility_notes": "대한파크골프협회에 2026년 7월 31일까지 등록된 시군협회 회원",
+      "association_membership_required": true,
+      "registration_type": "접수 단위 확인 필요",
+      "competition_type": [],
+      "fee": null,
+      "organizer": "양양군파크골프협회 강원특별자치도파크골프협회",
+      "host": "양양군체육회",
+      "contact": null,
+      "registration_method": "접수 단위 확인 필요",
+      "registration_url": null,
+      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=88",
+      "announcement_date": "2026-08-19",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
+      "trust_status": "공식 공고에서 자동수집",
+      "source_id": "gangwon_association",
+      "source_name": "강원특별자치도 파크골프협회 행사일정",
+      "source_type": "자동수집",
+      "attachments": [
+        {
+          "name": "제5회 양양송이배 대회요강-최종.hwp",
+          "url": "https://gpga7330.kr/bbs/download.php?bo_table=s3_1&wr_id=88&no=0&nonce=d06de5a82e580830ce20|1788618700|9733ac606b5af54450f9971fc806fdf71617c6fc",
+          "type": "hwp"
+        }
+      ],
+      "related_announcements": [],
+      "venue_location": {
+        "latitude": 38.090279,
+        "longitude": 128.637694,
+        "matched_address": "강원특별자치도 양양군 양양읍 송암리 540",
         "accuracy": "address"
       }
     },
@@ -2337,7 +2695,7 @@
       "registration_url": "https://www.kpga7330.com/competitions/a5b9708d-c90a-452d-a043-dc4d6c02441a/register",
       "announcement_url": "https://www.kpga7330.com/competitions/a5b9708d-c90a-452d-a043-dc4d6c02441a/register",
       "announcement_date": "2026-08-27",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -2349,12 +2707,149 @@
           "type": "pdf"
         }
       ],
+      "related_announcements": [
+        {
+          "title": "정읍시장배",
+          "url": "https://www.jnparkgolf.com/bbs/board.php?bo_table=yb_board01&wr_id=171",
+          "source_name": "전라남도 파크골프협회"
+        }
+      ],
       "venue_location": {
         "latitude": 35.701419,
         "longitude": 126.871705,
         "matched_address": "전북특별자치도 정읍시 신태인읍",
         "accuracy": "locality"
       }
+    },
+    {
+      "id": "official-fe978f94d824bb37",
+      "name": "2026 문화체육관광부장관기 전국파크골프대회",
+      "region": "경남",
+      "city": "창원시",
+      "venue": "경남 창원시 대산파크골프장",
+      "event_start": "2026-10-20",
+      "event_end": "2026-10-21",
+      "preliminary_dates": [],
+      "final_dates": [],
+      "registration_start": null,
+      "registration_end": null,
+      "status": "접수 예정",
+      "capacity": null,
+      "eligibility": [
+        "참가 자격 확인 필요"
+      ],
+      "eligibility_notes": null,
+      "association_membership_required": null,
+      "registration_type": "접수 단위 확인 필요",
+      "competition_type": [],
+      "fee": null,
+      "organizer": null,
+      "host": null,
+      "contact": null,
+      "registration_method": "접수 단위 확인 필요",
+      "registration_url": null,
+      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=90",
+      "announcement_date": "2026-08-19",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
+      "trust_status": "공식 공고에서 자동수집",
+      "source_id": "gangwon_association",
+      "source_name": "강원특별자치도 파크골프협회 행사일정",
+      "source_type": "자동수집",
+      "attachments": [],
+      "related_announcements": [],
+      "venue_location": {
+        "latitude": 35.202036,
+        "longitude": 128.599615,
+        "matched_address": "경남 창원시",
+        "accuracy": "locality"
+      }
+    },
+    {
+      "id": "official-c8a05e584594068a",
+      "name": "제2회 정선아리랑배 강원특별자치도 파크골프대회",
+      "region": "강원",
+      "city": "정선군",
+      "venue": "정선군 녹송파크골프장(정선군 정선읍 봉양리37-3)",
+      "event_start": "2026-10-23",
+      "event_end": "2026-10-24",
+      "preliminary_dates": [],
+      "final_dates": [],
+      "registration_start": null,
+      "registration_end": null,
+      "status": "접수 예정",
+      "capacity": "약803명(선수 576명, 심판 44명, 대회위원 32명, 정선협회대회운영위원100명,시군협회장 외50명)",
+      "eligibility": [
+        "참가 자격 확인 필요"
+      ],
+      "eligibility_notes": "2026. 6.30일까지 강원특별자치도 파크골프협회에 가입된 회원",
+      "association_membership_required": null,
+      "registration_type": "접수 단위 확인 필요",
+      "competition_type": [],
+      "fee": null,
+      "organizer": "정선군파크골프협회 / 정선군파크골프협회 강원특별자치도파크골프협회 사. 재정지원 : 정선군 아. 행정지원 : 정선군 체육회",
+      "host": null,
+      "contact": null,
+      "registration_method": "접수 단위 확인 필요",
+      "registration_url": null,
+      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=89",
+      "announcement_date": "2026-08-19",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
+      "trust_status": "공식 공고에서 자동수집",
+      "source_id": "gangwon_association",
+      "source_name": "강원특별자치도 파크골프협회 행사일정",
+      "source_type": "자동수집",
+      "attachments": [
+        {
+          "name": "1. 제2회정선아리랑배 대회 요강-최종.hwp",
+          "url": "https://gpga7330.kr/bbs/download.php?bo_table=s3_1&wr_id=89&no=0&nonce=be987d4405086c99757e|1788618700|d88653ff205fcf659896c745a71d29424907702c",
+          "type": "hwp"
+        }
+      ],
+      "related_announcements": [],
+      "venue_location": {
+        "latitude": 37.383931,
+        "longitude": 128.668776,
+        "matched_address": "강원특별자치도 정선군 정선읍 봉양리 37-3",
+        "accuracy": "address"
+      }
+    },
+    {
+      "id": "official-02e666615af14d9e",
+      "name": "춘천 소양강배 강원특별자치도파크골프대회",
+      "region": "강원",
+      "city": null,
+      "venue": "춘천 소양강파크골프장",
+      "event_start": "2026-10-30",
+      "event_end": "2026-10-30",
+      "preliminary_dates": [],
+      "final_dates": [],
+      "registration_start": null,
+      "registration_end": null,
+      "status": "접수 예정",
+      "capacity": null,
+      "eligibility": [
+        "참가 자격 확인 필요"
+      ],
+      "eligibility_notes": null,
+      "association_membership_required": null,
+      "registration_type": "접수 단위 확인 필요",
+      "competition_type": [],
+      "fee": null,
+      "organizer": null,
+      "host": null,
+      "contact": null,
+      "registration_method": "접수 단위 확인 필요",
+      "registration_url": null,
+      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=91",
+      "announcement_date": "2026-08-19",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
+      "trust_status": "공식 공고에서 자동수집",
+      "source_id": "gangwon_association",
+      "source_name": "강원특별자치도 파크골프협회 행사일정",
+      "source_type": "자동수집",
+      "attachments": [],
+      "related_announcements": [],
+      "venue_location": null
     },
     {
       "id": "kpga-7cd31d4e-cc1e-4f21-a0c8-e7500063cd95",
@@ -2391,7 +2886,7 @@
       "registration_url": "https://www.kpga7330.com/competitions/7cd31d4e-cc1e-4f21-a0c8-e7500063cd95/register",
       "announcement_url": "https://www.kpga7330.com/competitions/7cd31d4e-cc1e-4f21-a0c8-e7500063cd95/register",
       "announcement_date": "2026-08-21",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -2445,7 +2940,7 @@
       "registration_url": "https://www.kpga7330.com/competitions/e7d729e9-1628-4526-b3da-04f17839766a/register",
       "announcement_url": "https://www.kpga7330.com/competitions/e7d729e9-1628-4526-b3da-04f17839766a/register",
       "announcement_date": "2026-08-21",
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "공식 공고에서 자동수집",
       "source_id": "kpga_national",
       "source_name": "대한파크골프협회 대회·행사 일정",
@@ -2467,124 +2962,17 @@
   ],
   "notices": [
     {
-      "id": "notice-fe978f94d824bb37",
-      "title": "2026 문화체육관광부장관기 전국파크골프대회 일정 알림",
-      "region": "강원",
-      "source_id": "gangwon_association",
-      "source_name": "강원특별자치도 파크골프협회 행사일정",
-      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=90",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
       "id": "notice-8f0ab4920c01dd76",
       "title": "2026년 대회 및 행사계획표(하반기)수정-260715",
       "region": "강원",
       "source_id": "gangwon_association",
       "source_name": "강원특별자치도 파크골프협회 행사일정",
       "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=65",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "announcement_date": "2026-02-14",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-20a3ce5cb3b5a750",
-      "title": "삼척시장배 강원특별자치도파크골프대회 안내",
-      "region": "강원",
-      "source_id": "gangwon_association",
-      "source_name": "강원특별자치도 파크골프협회 행사일정",
-      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=86",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-f2c69b09e6cedbe1",
-      "title": "양양송이배 강원특별자치도파크골프대회 알림",
-      "region": "강원",
-      "source_id": "gangwon_association",
-      "source_name": "강원특별자치도 파크골프협회 행사일정",
-      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=88",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-c8a05e584594068a",
-      "title": "정선 아리랑배 강원특별자치도 파크골프 대회 알림",
-      "region": "강원",
-      "source_id": "gangwon_association",
-      "source_name": "강원특별자치도 파크골프협회 행사일정",
-      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=89",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-3a40ecdf49ab252a",
-      "title": "제1회 진주 남강유등축제배 전국파크골프대회 알림",
-      "region": "강원",
-      "source_id": "gangwon_association",
-      "source_name": "강원특별자치도 파크골프협회 행사일정",
-      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=93",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-1673f04a3b2ad7fd",
-      "title": "제3회 고령 대가야배 전국 파크골프대회 알림",
-      "region": "강원",
-      "source_id": "gangwon_association",
-      "source_name": "강원특별자치도 파크골프협회 행사일정",
-      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=94",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-02e666615af14d9e",
-      "title": "춘천 소양강배 강원특별자치도파크골프대회 일정 알림",
-      "region": "강원",
-      "source_id": "gangwon_association",
-      "source_name": "강원특별자치도 파크골프협회 행사일정",
-      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=91",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-d2b093b6600cd7f8",
-      "title": "태백산기 강원특별자치도파크골프대회 알림",
-      "region": "강원",
-      "source_id": "gangwon_association",
-      "source_name": "강원특별자치도 파크골프협회 행사일정",
-      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=92",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-cfb03fb287e434e1",
-      "title": "횡성한우배 강원특별자치도 파크골프대회 알림",
-      "region": "강원",
-      "source_id": "gangwon_association",
-      "source_name": "강원특별자치도 파크골프협회 행사일정",
-      "announcement_url": "https://gpga7330.kr/bbs/board.php?bo_table=s3_1&wr_id=87",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
+      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요.",
+      "attachments": []
     },
     {
       "id": "notice-552eb9687144af26",
@@ -2594,9 +2982,10 @@
       "source_name": "경기도장애인골프협회 대회 일정",
       "announcement_url": "https://ggpga.com/",
       "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
+      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요.",
+      "attachments": []
     },
     {
       "id": "notice-160f84a641ed0c84",
@@ -2605,22 +2994,11 @@
       "source_id": "kpgf_national",
       "source_name": "대한파크골프연맹 공지사항",
       "announcement_url": "https://kpgf.kr/m/board/detail.html?id=notices&no=19",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "announcement_date": "2026-07-20",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-c01bb075d38276a4",
-      "title": "2026.09.14. 대구시연맹 회장배 대회요강",
-      "region": "전국",
-      "source_id": "kpgf_national",
-      "source_name": "대한파크골프연맹 공지사항",
-      "announcement_url": "https://kpgf.kr/m/board/detail.html?id=notices&no=21",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
+      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요.",
+      "attachments": []
     },
     {
       "id": "notice-453bf1047bd607d8",
@@ -2629,22 +3007,27 @@
       "source_id": "kpgf_national",
       "source_name": "대한파크골프연맹 공지사항",
       "announcement_url": "https://kpgf.kr/m/board/detail.html?id=notices&no=20",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "announcement_date": "2026-08-01",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-4c0c9567f9074cbf",
-      "title": "★ 제1회 우리육우 전국파크골프대회 대회요강(참가자 모집중, ~2026.09.04 17시) ★",
-      "region": "전국",
-      "source_id": "kpgf_national",
-      "source_name": "대한파크골프연맹 공지사항",
-      "announcement_url": "https://kpgf.kr/m/board/detail.html?id=notices&no=24",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
+      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요.",
+      "attachments": [
+        {
+          "name": "공고 이미지",
+          "url": "https://kpgf.kr/wysiwyg/PEG/se2_17862829826754.png",
+          "type": "png"
+        },
+        {
+          "name": "공고 이미지",
+          "url": "https://kpgf.kr/wysiwyg/PEG/se2_17862829934010.png",
+          "type": "png"
+        },
+        {
+          "name": "공고 이미지",
+          "url": "https://kpgf.kr/wysiwyg/PEG/se2_17862830001181.png",
+          "type": "png"
+        }
+      ]
     },
     {
       "id": "notice-4a81902b1191efac",
@@ -2653,46 +3036,17 @@
       "source_id": "kpgf_national",
       "source_name": "대한파크골프연맹 공지사항",
       "announcement_url": "https://kpgf.kr/m/board/detail.html?id=notices&no=25",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
+      "announcement_date": "2026-08-19",
+      "last_checked_at": "2026-09-05T21:31:31+09:00",
       "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-23142935efd8e135",
-      "title": "정읍시장배",
-      "region": "전남",
-      "source_id": "jeonnam_association",
-      "source_name": "전라남도 파크골프협회",
-      "announcement_url": "https://www.jnparkgolf.com/bbs/board.php?bo_table=yb_board01&wr_id=171",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-6e9bf4a8b05b0611",
-      "title": "제2회 화순 적벽배 전국파크골프 대회 요강을 공지 해 주시면 고맙겠습니다.",
-      "region": "전남",
-      "source_id": "jeonnam_association",
-      "source_name": "전라남도 파크골프협회",
-      "announcement_url": "https://www.jnparkgolf.com/bbs/board.php?bo_table=yb_board01&wr_id=175",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
-    },
-    {
-      "id": "notice-019de9debf2fdba8",
-      "title": "제4회 제주특별자치도체육회장배 전도파크골프대회 요강(정정) 제주도 H",
-      "region": "제주",
-      "source_id": "jeju_association",
-      "source_name": "제주특별자치도 파크골프협회",
-      "announcement_url": "https://jejupga.com/bbs/board.php?bo_table=event&wr_id=10",
-      "announcement_date": null,
-      "last_checked_at": "2026-09-05T20:17:04+09:00",
-      "trust_status": "세부 내용 확인 필요",
-      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요."
+      "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요.",
+      "attachments": [
+        {
+          "name": "공고 이미지",
+          "url": "https://kpgf.kr/wysiwyg/PEG/se2_17874054070812.jpg",
+          "type": "jpg"
+        }
+      ]
     }
   ]
 }

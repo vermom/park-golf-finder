@@ -28,8 +28,9 @@ sources:
     allowed_hosts: [kpgf.kr, www.kpgf.kr]
     detail_link_regex: "detail\\.html.*(?:[?&])no="
     board_is_park_golf: true
+    detail_mode: title
     official: true
-    notes: 공식 공지 제목과 링크를 자동 발견하며, 이미지 요강의 세부 내용은 원문 확인 대상으로 표시합니다.
+    notes: 공식 공지 제목·게시일·이미지 링크를 수집하고 제목에 개최일이 명시된 공고는 카드화합니다.
 
   - id: seoul_association
     name: 서울특별시체육회 파크골프 종목단체
@@ -126,8 +127,9 @@ sources:
       - https://gpga7330.kr/bbs/board.php?bo_table=s3_1
     board_is_park_golf: true
     detail_link_regex: "(?:[?&])wr_id="
+    detail_mode: gnuboard_html
     official: true
-    notes: 공식 행사 게시판에서 대회 공고 링크를 자동 발견하고 첨부 요강은 원문 확인 대상으로 표시합니다.
+    notes: 공식 행사 게시판과 HWP 변환 본문에서 대회명·기간·장소·자격·인원·참가비를 자동해석합니다.
 
   - id: chungbuk_government
     name: 충청북도 도정소식
@@ -167,6 +169,7 @@ sources:
       - https://www.jnparkgolf.com/bbs/board.php?bo_table=yb_board01
     board_is_park_golf: true
     detail_link_regex: "(?:[?&])wr_id="
+    detail_mode: none
     official: true
     notes: 공식 게시판의 대회 공고 링크를 자동 발견하고 첨부 요강은 원문 확인 대상으로 표시합니다.
 
@@ -199,8 +202,9 @@ sources:
       - https://jejupga.com/bbs/board.php?bo_table=event
     board_is_park_golf: true
     detail_link_regex: "(?:[?&])wr_id="
+    detail_mode: gnuboard_pdf
     official: true
-    notes: 공식 대회 게시판의 공고 링크를 자동 발견하고 첨부 요강은 원문 확인 대상으로 표시합니다.
+    notes: 공식 대회 게시판의 PDF 요강을 읽어 대회명·기간·장소·자격·인원·참가비를 자동해석합니다.
 
   - id: busan_sports_portal
     name: 부산시 생활체육포털 대회·행사 일정

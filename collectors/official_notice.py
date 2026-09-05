@@ -9,6 +9,7 @@ from urllib.parse import urljoin, urlparse
 import requests
 
 from .base import SourceResult
+from .notice_detail import event_from_notice, fetch_notice_detail
 
 
 EVENT_WORDS = re.compile(r"(대회|선수권|페스티벌|오픈|리그|회장배|시장배|군수배|도지사배|총재배|체육대회)")
@@ -85,6 +86,7 @@ class OfficialNoticeCollector:
 
     def collect(self) -> SourceResult:
         notices: list[dict[str, Any]] = []
+        events: list[dict[str, Any]] = []
         errors: list[str] = []
         for list_url in self.source.get("list_urls") or [self.source["url"]]:
             try:
@@ -93,7 +95,7 @@ class OfficialNoticeCollector:
                 response.encoding = response.apparent_encoding or response.encoding
                 for url, title in extract_notice_links(response.text, list_url, self.source):
                     digest = hashlib.sha256(f"{self.source['id']}\0{url}".encode()).hexdigest()[:16]
-                    notices.append({
+                    notice = {
                         "id": f"notice-{digest}",
                         "title": title,
                         "region": self.source.get("region", "전국"),
@@ -104,17 +106,33 @@ class OfficialNoticeCollector:
                         "last_checked_at": self.checked_at,
                         "trust_status": "세부 내용 확인 필요",
                         "reason": "공식 게시판에서 발견했습니다. 참가 자격과 접수 기간은 원문·첨부 요강을 확인해 주세요.",
-                    })
+                        "attachments": [],
+                    }
+                    detail_mode = self.source.get("detail_mode", "none")
+                    if detail_mode != "none":
+                        try:
+                            detail = fetch_notice_detail(self.session, notice, detail_mode)
+                            notice["announcement_date"] = detail.get("announcement_date")
+                            notice["attachments"] = detail.get("attachments", [])
+                            event = event_from_notice(notice, detail, detail_mode)
+                            if event:
+                                events.append(event)
+                                continue
+                        except Exception as error:  # 상세 한 건이 실패해도 목록 발견 결과는 남깁니다.
+                            notice["reason"] = f"공식 공고를 발견했지만 세부 자동해석에 실패했습니다: {type(error).__name__}"
+                    notices.append(notice)
             except requests.RequestException as error:
                 errors.append(f"{type(error).__name__}: {list_url}")
 
         unique = list({notice["announcement_url"]: notice for notice in notices}.values())
-        if errors and not unique:
+        if errors and not unique and not events:
             raise RuntimeError("; ".join(errors))
         suffix = f" (일부 목록 오류 {len(errors)}곳)" if errors else ""
         return SourceResult(
             source_id=self.source["id"],
+            events=events,
             notices=unique,
             status="success",
-            message=f"공식 대회 공고 후보 {len(unique)}건 발견{suffix}",
+            message=f"공식 공고 {len(events) + len(unique)}건 중 대회 카드 {len(events)}건 자동변환, 세부 확인 {len(unique)}건{suffix}",
+            matched_notices=len(events),
         )

@@ -12,6 +12,8 @@ def domain_errors(payload: dict[str, Any]) -> list[str]:
     notices = payload.get("notices", [])
     if payload.get("meta", {}).get("notice_count") != len(notices):
         errors.append("meta.notice_count가 실제 notices 개수와 다릅니다.")
+    if not isinstance(payload.get("meta", {}).get("matched_notice_count"), int):
+        errors.append("meta.matched_notice_count가 정수가 아닙니다.")
     seen: set[str] = set()
     for index, event in enumerate(events):
         event_id = event.get("id", "")

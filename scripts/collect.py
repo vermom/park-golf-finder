@@ -19,6 +19,7 @@ from collectors.busan import BusanSportsCollector  # noqa: E402
 from collectors.manual import load_manual_events  # noqa: E402
 from collectors.official_notice import OfficialNoticeCollector  # noqa: E402
 from scripts.geocoding import enrich_venue_locations  # noqa: E402
+from scripts.matching import match_notices  # noqa: E402
 from scripts.validation import domain_errors  # noqa: E402
 
 KST = ZoneInfo("Asia/Seoul")
@@ -40,10 +41,24 @@ def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
             continue
         preferred, secondary = (event, current) if event["source_type"] == "자동수집" and current["source_type"] != "자동수집" else (current, event)
         for field, value in secondary.items():
-            if field in {"attachments", "eligibility", "competition_type", "preliminary_dates", "final_dates"}:
+            if field in {"eligibility", "competition_type", "preliminary_dates", "final_dates"}:
                 preferred[field] = list(dict.fromkeys([*(preferred.get(field) or []), *(value or [])]))
+            elif field == "attachments":
+                existing_urls = {item["url"] for item in preferred.get(field, [])}
+                preferred[field] = [*(preferred.get(field) or []), *(item for item in (value or []) if item["url"] not in existing_urls)]
+            elif field == "related_announcements":
+                existing_urls = {item["url"] for item in preferred.get(field, [])}
+                preferred[field] = [*(preferred.get(field) or []), *(item for item in (value or []) if item["url"] not in existing_urls)]
             elif preferred.get(field) in (None, "", "확인 필요") and value not in (None, ""):
                 preferred[field] = value
+        if secondary.get("announcement_url") != preferred.get("announcement_url"):
+            related = preferred.setdefault("related_announcements", [])
+            if not any(item["url"] == secondary["announcement_url"] for item in related):
+                related.append({
+                    "title": secondary["name"],
+                    "url": secondary["announcement_url"],
+                    "source_name": secondary["source_name"],
+                })
         grouped[key] = preferred
     return sorted(grouped.values(), key=lambda event: (event["event_start"], event["name"]))
 
@@ -72,6 +87,7 @@ def main() -> int:
     existing = json.loads(OUTPUT.read_text(encoding="utf-8")) if OUTPUT.exists() else {"events": []}
     collected: list[dict[str, Any]] = []
     collected_notices: list[dict[str, Any]] = []
+    promoted_notice_count = 0
     statuses: list[dict[str, str]] = []
 
     for source in config["sources"]:
@@ -93,6 +109,7 @@ def main() -> int:
             result = collector(source, now).collect()
             collected.extend(result.events)
             collected_notices.extend(result.notices)
+            promoted_notice_count += result.matched_notices
             statuses.append({
                 "id": source["id"], "name": source["name"], "status": result.status,
                 "last_checked_at": now, "message": result.message, "url": source["url"],
@@ -100,6 +117,8 @@ def main() -> int:
         except Exception as error:  # 출처 하나의 실패가 전체 정상 데이터를 지우지 않게 합니다.
             preserved = [event for event in existing.get("events", []) if event.get("source_id") == source["id"]]
             preserved_notices = [notice for notice in existing.get("notices", []) if notice.get("source_id") == source["id"]]
+            for notice in preserved_notices:
+                notice.setdefault("attachments", [])
             collected.extend(preserved)
             collected_notices.extend(preserved_notices)
             statuses.append({
@@ -111,6 +130,8 @@ def main() -> int:
     collected.extend(load_manual_events(ROOT / "data" / "manual_events.csv", now))
     events = deduplicate(collected)
     notices = deduplicate_notices(collected_notices, events)
+    notices, linked_notice_count = match_notices(events, notices)
+    matched_notice_count = promoted_notice_count + linked_notice_count
     enrich_venue_locations(events)
     payload = {
         "meta": {
@@ -118,6 +139,7 @@ def main() -> int:
             "timezone": "Asia/Seoul",
             "event_count": len(events),
             "notice_count": len(notices),
+            "matched_notice_count": matched_notice_count,
             "source_statuses": statuses,
         },
         "events": events,
@@ -131,7 +153,7 @@ def main() -> int:
     temporary = OUTPUT.with_suffix(".json.tmp")
     temporary.write_text(serialized, encoding="utf-8")
     temporary.replace(OUTPUT)
-    print(f"수집 완료: 완전 대회 {len(events)}건, 공식 공고 후보 {len(notices)}건, 출처 {len(statuses)}곳")
+    print(f"수집 완료: 완전 대회 {len(events)}건, 자동 매칭·카드화 {matched_notice_count}건, 세부 확인 {len(notices)}건, 출처 {len(statuses)}곳")
     return 0
 
 

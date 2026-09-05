@@ -62,6 +62,7 @@ export type EventItem = {
   source_name: string;
   source_type: '자동수집' | '수동등록';
   attachments: Array<{ name: string; url: string; type: string }>;
+  related_announcements?: Array<{ title: string; url: string; source_name: string }>;
 };
 
 export type EventFilters = {
@@ -124,6 +125,7 @@ export function sortEvents(events: EventItem[], sort: 'event' | 'registration', 
 
 export function scheduleDates(event: EventItem) {
   const dates = new Set<string>([...event.preliminary_dates, ...event.final_dates]);
+  if (dates.size > 0) return dates;
   const start = new Date(`${event.event_start}T12:00:00+09:00`);
   const end = new Date(`${event.event_end}T12:00:00+09:00`);
   for (const cursor = new Date(start); cursor <= end; cursor.setDate(cursor.getDate() + 1)) {

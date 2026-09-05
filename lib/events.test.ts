@@ -84,4 +84,17 @@ describe('신청 일정 충돌', () => {
     expect(conflicts.get('one')).toEqual(['겹치는 대회']);
     expect(conflicts.get('two')).toEqual(['경주 테스트 대회']);
   });
+
+  it('예선과 결선 사이 쉬는 날은 충돌로 잘못 표시하지 않는다', () => {
+    const staged = event({
+      id: 'staged',
+      name: '예선·결선 대회',
+      event_start: '2026-09-08',
+      event_end: '2026-10-14',
+      preliminary_dates: ['2026-09-08', '2026-09-09'],
+      final_dates: ['2026-10-13', '2026-10-14'],
+    });
+    const gap = event({ id: 'gap', name: '사이 날짜 대회', event_start: '2026-09-30', event_end: '2026-09-30' });
+    expect(conflictsFor([staged, gap], new Set(['staged', 'gap'])).size).toBe(0);
+  });
 });

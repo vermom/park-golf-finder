@@ -44,5 +44,7 @@ describe('내 정보 선택창 호환성', () => {
     expect(source).toContain('다른 공식기관 새 공고');
     expect(source).toContain('공식 공고 열기');
     expect(source).toContain('notice_count');
+    expect(source).toContain('matched_notice_count');
+    expect(source).toContain('같은 대회의 다른 공식 공고');
   });
 });

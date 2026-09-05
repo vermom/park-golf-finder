@@ -23,7 +23,10 @@ def validate_links(payload: dict) -> list[str]:
         if event.get("registration_url"):
             urls.add(event["registration_url"])
         urls.update(item["url"] for item in event.get("attachments", []))
+        urls.update(item["url"] for item in event.get("related_announcements", []))
     urls.update(notice["announcement_url"] for notice in payload.get("notices", []))
+    for notice in payload.get("notices", []):
+        urls.update(item["url"] for item in notice.get("attachments", []))
     session = requests.Session()
     session.headers["User-Agent"] = "park-golf-finder/1.0 link-check"
     for url in sorted(urls):
@@ -57,7 +60,7 @@ def main() -> int:
         print(f"LINK ERROR {error}", file=sys.stderr)
     if errors or logical_errors or link_errors:
         return 1
-    print(f"검증 성공: {payload['meta']['event_count']}개 대회, {payload['meta'].get('notice_count', 0)}개 공식 공고 후보")
+    print(f"검증 성공: {payload['meta']['event_count']}개 대회, {payload['meta'].get('matched_notice_count', 0)}개 자동 매칭, {payload['meta'].get('notice_count', 0)}개 확인 대기")
     return 0
 
 

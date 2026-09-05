@@ -11,3 +11,4 @@ class SourceResult:
     notices: list[dict[str, Any]] = field(default_factory=list)
     status: str = "success"
     message: str = ""
+    matched_notices: int = 0

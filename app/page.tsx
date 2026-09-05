@@ -90,6 +90,7 @@ type OfficialNotice = {
   last_checked_at: string;
   trust_status: '세부 내용 확인 필요';
   reason: string;
+  attachments: { name: string; url: string; type: string }[];
 };
 
 type EventFile = {
@@ -98,6 +99,7 @@ type EventFile = {
     timezone: string;
     event_count: number;
     notice_count: number;
+    matched_notice_count: number;
     source_statuses: SourceStatus[];
   };
   events: EventItem[];
@@ -752,7 +754,7 @@ export default function Home() {
           <div className="summary-tile summary-primary"><span>접수 가능</span><strong>{data ? `${openCount}개` : '—'}</strong></div>
           <div className="summary-tile"><span>관심 대회</span><strong>{favorites.size}개</strong></div>
           <div className="summary-tile"><span>신청 완료</span><strong>{applied.size}개</strong></div>
-          <div className="summary-tile"><span>새 공식 공고</span><strong>{data ? `${data.meta.notice_count}개` : '—'}</strong></div>
+          <div className="summary-tile"><span>확인 남은 공고</span><strong>{data ? `${data.meta.notice_count}개` : '—'}</strong></div>
         </div>
 
         <section className="profile-panel mb-4" aria-labelledby="profile-heading">
@@ -822,7 +824,7 @@ export default function Home() {
               <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-amber-500 text-white" aria-hidden="true"><FileText /></span>
               <div>
                 <h2 id="official-notice-heading" className="text-xl font-black text-amber-950">다른 공식기관 새 공고</h2>
-                <p className="mt-1 text-base leading-7 text-amber-950">전국·시도 협회와 지자체에서 찾았지만, 접수 날짜나 참가 자격을 아직 완전한 카드로 읽지 못한 공고예요. 공식 원문을 바로 확인할 수 있습니다.</p>
+                <p className="mt-1 text-base leading-7 text-amber-950">기존 대회와 자동으로 연결하거나 카드로 만든 공고는 {data.meta.matched_notice_count}건이에요. 아래에는 날짜·접수 정보를 아직 확실하게 읽지 못한 공고만 남겨뒀어요.</p>
               </div>
             </div>
             <details className="mt-4 rounded-2xl border border-amber-300 bg-white" open={shownNotices.length > 0 && shownNotices.length <= 4}>
@@ -839,6 +841,11 @@ export default function Home() {
                     <a href={notice.announcement_url} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline', size: 'lg', className: 'mt-3 h-12 w-full border-emerald-300 bg-white text-base font-black text-emerald-900' })}>
                       공식 공고 열기 <ExternalLink aria-hidden="true" />
                     </a>
+                    {notice.attachments[0] && (
+                      <a href={notice.attachments[0].url} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline', size: 'lg', className: 'mt-2 h-12 w-full border-amber-300 bg-amber-50 text-base font-black text-amber-950' })}>
+                        첨부 요강 열기 <ExternalLink aria-hidden="true" />
+                      </a>
+                    )}
                   </li>
                 )) : (
                   <li className="rounded-xl bg-slate-50 p-4 text-base font-bold text-slate-700">현재 검색·지역 조건에 맞는 새 공식 공고가 없어요.</li>
@@ -1005,6 +1012,16 @@ export default function Home() {
                             <a href={event.announcement_url} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline', size: 'lg', className: 'h-12 text-base font-black' })}><FileText aria-hidden="true" />공식 공고 보기</a>
                             {event.attachments[0] && <a href={event.attachments[0].url} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline', size: 'lg', className: 'h-12 text-base font-black' })}><ExternalLink aria-hidden="true" />첨부 요강 보기</a>}
                           </div>
+                          {(event.related_announcements?.length ?? 0) > 0 && (
+                            <div className="mt-3 rounded-xl border border-sky-200 bg-sky-50 p-3">
+                              <p className="font-black text-sky-950">같은 대회의 다른 공식 공고</p>
+                              <ul className="mt-2 grid gap-2">
+                                {event.related_announcements?.map((item) => (
+                                  <li key={item.url}><a href={item.url} target="_blank" rel="noreferrer" className="font-bold text-emerald-800 underline underline-offset-4">{item.source_name} 공고 <ExternalLink className="inline size-4" aria-hidden="true" /></a></li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                         </AccordionContent>
                       </AccordionItem>
                     </Accordion>
@@ -1022,7 +1039,7 @@ export default function Home() {
               <Trophy className="mt-1 size-6 shrink-0 text-emerald-700" aria-hidden="true" />
               <div>
                 <h2 className="text-lg font-black">수집 정보</h2>
-                <p className="text-slate-700">마지막 수집: {formatDate(data.meta.generated_at, true)} · 완전 대회 {data.meta.event_count}개 · 공식 공고 후보 {data.meta.notice_count}개</p>
+                <p className="text-slate-700">마지막 수집: {formatDate(data.meta.generated_at, true)} · 대회 {data.meta.event_count}개 · 자동 매칭 {data.meta.matched_notice_count}건 · 확인 남은 공고 {data.meta.notice_count}개</p>
                 <p className="text-sm text-slate-600">자동수집 오류 {failedSources}곳. 오류가 있어도 이전 정상 데이터는 유지됩니다.</p>
               </div>
             </div>

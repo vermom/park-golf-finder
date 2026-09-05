@@ -7,7 +7,7 @@ from scripts.validation import domain_errors
 
 def valid_payload():
     return {
-        "meta": {"event_count": 1, "notice_count": 0},
+        "meta": {"event_count": 1, "notice_count": 0, "matched_notice_count": 0},
         "events": [{
             "id": "event-1",
             "event_start": "2026-10-01",
