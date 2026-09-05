@@ -7,7 +7,7 @@ from scripts.validation import domain_errors
 
 def valid_payload():
     return {
-        "meta": {"event_count": 1},
+        "meta": {"event_count": 1, "notice_count": 0},
         "events": [{
             "id": "event-1",
             "event_start": "2026-10-01",
@@ -15,6 +15,7 @@ def valid_payload():
             "preliminary_dates": ["2026-10-01"],
             "final_dates": ["2026-10-02"],
         }],
+        "notices": [],
     }
 
 
@@ -37,3 +38,10 @@ def test_rejects_invalid_date_and_duplicate_id():
     assert any("잘못된 날짜" in error for error in domain_errors(payload))
     assert any("event_count" in error for error in domain_errors(payload))
 
+
+def test_rejects_notice_count_and_duplicate_notice_link():
+    payload = valid_payload()
+    notice = {"id": "notice-1", "announcement_url": "https://example.org/notice/1"}
+    payload["notices"] = [notice, {**notice, "id": "notice-2"}]
+    assert any("notice_count" in error for error in domain_errors(payload))
+    assert any("중복 링크" in error for error in domain_errors(payload))

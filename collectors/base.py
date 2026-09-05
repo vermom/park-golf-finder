@@ -8,6 +8,6 @@ from typing import Any
 class SourceResult:
     source_id: str
     events: list[dict[str, Any]] = field(default_factory=list)
+    notices: list[dict[str, Any]] = field(default_factory=list)
     status: str = "success"
     message: str = ""
-

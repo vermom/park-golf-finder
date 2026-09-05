@@ -15,7 +15,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from collectors.kpga import KpgaCollector  # noqa: E402
+from collectors.busan import BusanSportsCollector  # noqa: E402
 from collectors.manual import load_manual_events  # noqa: E402
+from collectors.official_notice import OfficialNoticeCollector  # noqa: E402
 from scripts.geocoding import enrich_venue_locations  # noqa: E402
 from scripts.validation import domain_errors  # noqa: E402
 
@@ -46,6 +48,15 @@ def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(grouped.values(), key=lambda event: (event["event_start"], event["name"]))
 
 
+def deduplicate_notices(notices: list[dict[str, Any]], events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    event_urls = {event["announcement_url"] for event in events}
+    unique: dict[str, dict[str, Any]] = {}
+    for notice in notices:
+        if notice["announcement_url"] not in event_urls:
+            unique[notice["announcement_url"]] = notice
+    return sorted(unique.values(), key=lambda notice: (notice["region"], notice["title"]))
+
+
 def validate(payload: dict[str, Any]) -> None:
     schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
     errors = sorted(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(payload), key=lambda error: list(error.path))
@@ -60,6 +71,7 @@ def main() -> int:
     config = yaml.safe_load((ROOT / "sources.yml").read_text(encoding="utf-8"))
     existing = json.loads(OUTPUT.read_text(encoding="utf-8")) if OUTPUT.exists() else {"events": []}
     collected: list[dict[str, Any]] = []
+    collected_notices: list[dict[str, Any]] = []
     statuses: list[dict[str, str]] = []
 
     for source in config["sources"]:
@@ -70,34 +82,46 @@ def main() -> int:
             })
             continue
         try:
-            if source["collector"] != "kpga":
+            collectors = {
+                "kpga": KpgaCollector,
+                "busan_sports": BusanSportsCollector,
+                "official_notice": OfficialNoticeCollector,
+            }
+            collector = collectors.get(source["collector"])
+            if collector is None:
                 raise ValueError(f"알 수 없는 수집기: {source['collector']}")
-            result = KpgaCollector(source, now).collect()
+            result = collector(source, now).collect()
             collected.extend(result.events)
+            collected_notices.extend(result.notices)
             statuses.append({
                 "id": source["id"], "name": source["name"], "status": result.status,
                 "last_checked_at": now, "message": result.message, "url": source["url"],
             })
         except Exception as error:  # 출처 하나의 실패가 전체 정상 데이터를 지우지 않게 합니다.
             preserved = [event for event in existing.get("events", []) if event.get("source_id") == source["id"]]
+            preserved_notices = [notice for notice in existing.get("notices", []) if notice.get("source_id") == source["id"]]
             collected.extend(preserved)
+            collected_notices.extend(preserved_notices)
             statuses.append({
                 "id": source["id"], "name": source["name"], "status": "failed",
-                "last_checked_at": now, "message": f"수집 실패, 이전 데이터 {len(preserved)}건 보존: {type(error).__name__}: {error}", "url": source["url"],
+                "last_checked_at": now, "message": f"수집 실패, 이전 데이터 {len(preserved)}건·공고 {len(preserved_notices)}건 보존: {type(error).__name__}: {error}", "url": source["url"],
             })
             print(f"[WARN] {source['id']}: {type(error).__name__}: {error}", file=sys.stderr)
 
     collected.extend(load_manual_events(ROOT / "data" / "manual_events.csv", now))
     events = deduplicate(collected)
+    notices = deduplicate_notices(collected_notices, events)
     enrich_venue_locations(events)
     payload = {
         "meta": {
             "generated_at": now,
             "timezone": "Asia/Seoul",
             "event_count": len(events),
+            "notice_count": len(notices),
             "source_statuses": statuses,
         },
         "events": events,
+        "notices": notices,
     }
     validate(payload)
     serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
@@ -107,7 +131,7 @@ def main() -> int:
     temporary = OUTPUT.with_suffix(".json.tmp")
     temporary.write_text(serialized, encoding="utf-8")
     temporary.replace(OUTPUT)
-    print(f"수집 완료: {len(events)}건, 출처 {len(statuses)}곳")
+    print(f"수집 완료: 완전 대회 {len(events)}건, 공식 공고 후보 {len(notices)}건, 출처 {len(statuses)}곳")
     return 0
 
 

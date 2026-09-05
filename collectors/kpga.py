@@ -152,4 +152,9 @@ class KpgaCollector:
                     events[-1]["trust_status"] = "세부 내용 확인 필요"
                     events[-1]["eligibility_notes"] = events[-1]["eligibility_notes"] or f"첨부 요강 자동 추출 실패: {type(error).__name__}"
             time.sleep(0.03)
-        return SourceResult(self.source["id"], events, "success", f"공식 대회 {len(events)}건 수집")
+        return SourceResult(
+            source_id=self.source["id"],
+            events=events,
+            status="success",
+            message=f"공식 대회 {len(events)}건 수집",
+        )

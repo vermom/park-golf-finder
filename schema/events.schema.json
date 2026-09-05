@@ -4,16 +4,17 @@
   "title": "파크골프 대회 수집 결과",
   "type": "object",
   "additionalProperties": false,
-  "required": ["meta", "events"],
+  "required": ["meta", "events", "notices"],
   "properties": {
     "meta": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["generated_at", "timezone", "event_count", "source_statuses"],
+      "required": ["generated_at", "timezone", "event_count", "notice_count", "source_statuses"],
       "properties": {
         "generated_at": { "type": "string", "format": "date-time" },
         "timezone": { "const": "Asia/Seoul" },
         "event_count": { "type": "integer", "minimum": 0 },
+        "notice_count": { "type": "integer", "minimum": 0 },
         "source_statuses": {
           "type": "array",
           "items": {
@@ -35,11 +36,32 @@
     "events": {
       "type": "array",
       "items": { "$ref": "#/$defs/event" }
+    },
+    "notices": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/notice" }
     }
   },
   "$defs": {
     "nullableString": { "type": ["string", "null"] },
     "dateList": { "type": "array", "items": { "type": "string", "format": "date" }, "uniqueItems": true },
+    "notice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "region", "source_id", "source_name", "announcement_url", "announcement_date", "last_checked_at", "trust_status", "reason"],
+      "properties": {
+        "id": { "type": "string", "minLength": 3 },
+        "title": { "type": "string", "minLength": 5 },
+        "region": { "type": "string" },
+        "source_id": { "type": "string", "minLength": 1 },
+        "source_name": { "type": "string", "minLength": 1 },
+        "announcement_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "announcement_date": { "type": ["string", "null"], "format": "date" },
+        "last_checked_at": { "type": "string", "format": "date-time" },
+        "trust_status": { "const": "세부 내용 확인 필요" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
     "event": {
       "type": "object",
       "additionalProperties": false,

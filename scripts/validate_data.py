@@ -23,6 +23,7 @@ def validate_links(payload: dict) -> list[str]:
         if event.get("registration_url"):
             urls.add(event["registration_url"])
         urls.update(item["url"] for item in event.get("attachments", []))
+    urls.update(notice["announcement_url"] for notice in payload.get("notices", []))
     session = requests.Session()
     session.headers["User-Agent"] = "park-golf-finder/1.0 link-check"
     for url in sorted(urls):
@@ -56,7 +57,7 @@ def main() -> int:
         print(f"LINK ERROR {error}", file=sys.stderr)
     if errors or logical_errors or link_errors:
         return 1
-    print(f"검증 성공: {payload['meta']['event_count']}개 대회")
+    print(f"검증 성공: {payload['meta']['event_count']}개 대회, {payload['meta'].get('notice_count', 0)}개 공식 공고 후보")
     return 0
 
 

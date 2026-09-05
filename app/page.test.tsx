@@ -38,4 +38,11 @@ describe('내 정보 선택창 호환성', () => {
     expect(source).not.toContain('event.source_type');
     expect(source).not.toContain('event.trust_status');
   });
+
+  it('세부 해석이 남은 공식 공고를 별도로 보여준다', () => {
+    const source = readFileSync(new URL('./page.tsx', import.meta.url), 'utf8');
+    expect(source).toContain('다른 공식기관 새 공고');
+    expect(source).toContain('공식 공고 열기');
+    expect(source).toContain('notice_count');
+  });
 });

@@ -79,14 +79,29 @@ type SourceStatus = {
   url: string;
 };
 
+type OfficialNotice = {
+  id: string;
+  title: string;
+  region: string;
+  source_id: string;
+  source_name: string;
+  announcement_url: string;
+  announcement_date: string | null;
+  last_checked_at: string;
+  trust_status: '세부 내용 확인 필요';
+  reason: string;
+};
+
 type EventFile = {
   meta: {
     generated_at: string;
     timezone: string;
     event_count: number;
+    notice_count: number;
     source_statuses: SourceStatus[];
   };
   events: EventItem[];
+  notices: OfficialNotice[];
 };
 
 type SavedState = { favorites: string[]; applied: string[]; profile: LocalProfile };
@@ -409,6 +424,14 @@ export default function Home() {
     });
     return sortEvents(filtered, sort, profile.region);
   }, [allEvents, filters, sort, viewMode, favorites, applied, profile.region]);
+  const shownNotices = useMemo(() => {
+    const query = filters.query.trim().toLocaleLowerCase('ko');
+    return (data?.notices ?? []).filter((notice) => {
+      if (filters.region && notice.region !== filters.region && notice.region !== '전국') return false;
+      if (!query) return true;
+      return `${notice.title} ${notice.region} ${notice.source_name}`.toLocaleLowerCase('ko').includes(query);
+    });
+  }, [data, filters.query, filters.region]);
 
   const openCount = allEvents.filter((event) => ['접수 중', '마감 임박'].includes(computeStatus(event))).length;
   const failedSources = data?.meta.source_statuses.filter((source) => source.status === 'failed').length ?? 0;
@@ -725,10 +748,11 @@ export default function Home() {
       </header>
 
       <section className="mx-auto max-w-6xl px-4 pb-16 pt-5 sm:px-6">
-        <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div className="summary-tile summary-primary"><span>접수 가능</span><strong>{data ? `${openCount}개` : '—'}</strong></div>
           <div className="summary-tile"><span>관심 대회</span><strong>{favorites.size}개</strong></div>
-          <div className="summary-tile col-span-2 sm:col-span-1"><span>신청 완료</span><strong>{applied.size}개</strong></div>
+          <div className="summary-tile"><span>신청 완료</span><strong>{applied.size}개</strong></div>
+          <div className="summary-tile"><span>새 공식 공고</span><strong>{data ? `${data.meta.notice_count}개` : '—'}</strong></div>
         </div>
 
         <section className="profile-panel mb-4" aria-labelledby="profile-heading">
@@ -791,6 +815,38 @@ export default function Home() {
           </div>
           <p className="mt-2 text-sm text-slate-500">정렬: {sort === 'event' ? '개최일 최신순' : '접수 마감일순'} · 모든 날짜는 한국시간 기준</p>
         </section>
+
+        {data && data.notices.length > 0 && (
+          <section className="mx-auto mb-5 w-full max-w-4xl rounded-3xl border-2 border-amber-200 bg-amber-50 p-4 sm:p-5" aria-labelledby="official-notice-heading">
+            <div className="flex items-start gap-3">
+              <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-amber-500 text-white" aria-hidden="true"><FileText /></span>
+              <div>
+                <h2 id="official-notice-heading" className="text-xl font-black text-amber-950">다른 공식기관 새 공고</h2>
+                <p className="mt-1 text-base leading-7 text-amber-950">전국·시도 협회와 지자체에서 찾았지만, 접수 날짜나 참가 자격을 아직 완전한 카드로 읽지 못한 공고예요. 공식 원문을 바로 확인할 수 있습니다.</p>
+              </div>
+            </div>
+            <details className="mt-4 rounded-2xl border border-amber-300 bg-white" open={shownNotices.length > 0 && shownNotices.length <= 4}>
+              <summary className="cursor-pointer px-4 py-4 text-lg font-black text-emerald-950">공식 공고 {shownNotices.length}건 확인하기</summary>
+              <ul className="grid gap-3 border-t border-amber-200 p-3 sm:p-4">
+                {shownNotices.length > 0 ? shownNotices.map((notice) => (
+                  <li key={notice.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="mb-2 flex flex-wrap gap-2">
+                      <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-black text-emerald-900">{notice.region} 출처</span>
+                      <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-black text-amber-950">세부 내용 확인 필요</span>
+                    </div>
+                    <h3 className="text-lg font-black leading-7 text-slate-950">{notice.title}</h3>
+                    <p className="mt-1 text-sm leading-6 text-slate-600">출처: {notice.source_name}</p>
+                    <a href={notice.announcement_url} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline', size: 'lg', className: 'mt-3 h-12 w-full border-emerald-300 bg-white text-base font-black text-emerald-900' })}>
+                      공식 공고 열기 <ExternalLink aria-hidden="true" />
+                    </a>
+                  </li>
+                )) : (
+                  <li className="rounded-xl bg-slate-50 p-4 text-base font-bold text-slate-700">현재 검색·지역 조건에 맞는 새 공식 공고가 없어요.</li>
+                )}
+              </ul>
+            </details>
+          </section>
+        )}
 
         <div className="mx-auto mb-4 flex w-full min-w-0 max-w-4xl flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -966,7 +1022,7 @@ export default function Home() {
               <Trophy className="mt-1 size-6 shrink-0 text-emerald-700" aria-hidden="true" />
               <div>
                 <h2 className="text-lg font-black">수집 정보</h2>
-                <p className="text-slate-700">마지막 수집: {formatDate(data.meta.generated_at, true)} · 총 {data.meta.event_count}개</p>
+                <p className="text-slate-700">마지막 수집: {formatDate(data.meta.generated_at, true)} · 완전 대회 {data.meta.event_count}개 · 공식 공고 후보 {data.meta.notice_count}개</p>
                 <p className="text-sm text-slate-600">자동수집 오류 {failedSources}곳. 오류가 있어도 이전 정상 데이터는 유지됩니다.</p>
               </div>
             </div>

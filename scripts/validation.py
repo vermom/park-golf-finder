@@ -9,6 +9,9 @@ def domain_errors(payload: dict[str, Any]) -> list[str]:
     events = payload.get("events", [])
     if payload.get("meta", {}).get("event_count") != len(events):
         errors.append("meta.event_count가 실제 events 개수와 다릅니다.")
+    notices = payload.get("notices", [])
+    if payload.get("meta", {}).get("notice_count") != len(notices):
+        errors.append("meta.notice_count가 실제 notices 개수와 다릅니다.")
     seen: set[str] = set()
     for index, event in enumerate(events):
         event_id = event.get("id", "")
@@ -28,4 +31,13 @@ def domain_errors(payload: dict[str, Any]) -> list[str]:
                     date.fromisoformat(value)
                 except (TypeError, ValueError):
                     errors.append(f"events/{index}/{field}: 잘못된 날짜 {value}")
+    notice_ids: set[str] = set()
+    notice_urls: set[str] = set()
+    for index, notice in enumerate(notices):
+        if notice.get("id") in notice_ids:
+            errors.append(f"notices/{index}/id: 중복 ID {notice.get('id')}")
+        if notice.get("announcement_url") in notice_urls:
+            errors.append(f"notices/{index}/announcement_url: 중복 링크 {notice.get('announcement_url')}")
+        notice_ids.add(notice.get("id", ""))
+        notice_urls.add(notice.get("announcement_url", ""))
     return errors

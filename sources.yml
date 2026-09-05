@@ -20,10 +20,16 @@ sources:
     name: 대한파크골프연맹 공지사항
     region: 전국
     category: national_federation
-    mode: manual_required
-    url: https://www.kpgf.kr/board/index.html?id=notices
+    mode: auto
+    collector: official_notice
+    url: https://kpgf.kr/m/board/index.html?id=notices
+    list_urls:
+      - https://kpgf.kr/m/board/index.html?id=notices
+    allowed_hosts: [kpgf.kr, www.kpgf.kr]
+    detail_link_regex: "detail\\.html.*(?:[?&])no="
+    board_is_park_golf: true
     official: true
-    notes: 대회 요강이 이미지 중심이라 자동 OCR 대신 수동 등록합니다.
+    notes: 공식 공지 제목과 링크를 자동 발견하며, 이미지 요강의 세부 내용은 원문 확인 대상으로 표시합니다.
 
   - id: seoul_association
     name: 서울특별시체육회 파크골프 종목단체
@@ -101,19 +107,27 @@ sources:
     name: 경기도장애인골프협회 대회 일정
     region: 경기
     category: provincial_association
-    mode: manual_required
+    mode: auto
+    collector: official_notice
     url: https://ggpga.com/
+    list_urls:
+      - https://ggpga.com/
     official: true
-    notes: 장애인 대회 범위의 공식 출처로 별도 수동 확인합니다.
+    notes: 장애인 파크골프 대회 범위의 공식 홈페이지 제목과 링크를 자동 발견합니다.
 
   - id: gangwon_association
     name: 강원특별자치도 파크골프협회 행사일정
     region: 강원
     category: provincial_association
-    mode: manual_required
-    url: https://gpga7330.kr/
+    mode: auto
+    collector: official_notice
+    url: https://gpga7330.kr/bbs/board.php?bo_table=s3_1
+    list_urls:
+      - https://gpga7330.kr/bbs/board.php?bo_table=s3_1
+    board_is_park_golf: true
+    detail_link_regex: "(?:[?&])wr_id="
     official: true
-    notes: 첨부 중심 게시판이라 수동 확인합니다.
+    notes: 공식 행사 게시판에서 대회 공고 링크를 자동 발견하고 첨부 요강은 원문 확인 대상으로 표시합니다.
 
   - id: chungbuk_government
     name: 충청북도 도정소식
@@ -146,10 +160,15 @@ sources:
     name: 전라남도 파크골프협회
     region: 전남
     category: provincial_association
-    mode: manual_required
-    url: https://www.jnparkgolf.com/
+    mode: auto
+    collector: official_notice
+    url: https://www.jnparkgolf.com/bbs/board.php?bo_table=yb_board01
+    list_urls:
+      - https://www.jnparkgolf.com/bbs/board.php?bo_table=yb_board01
+    board_is_park_golf: true
+    detail_link_regex: "(?:[?&])wr_id="
     official: true
-    notes: 게시판 첨부 공고를 수동 확인합니다.
+    notes: 공식 게시판의 대회 공고 링크를 자동 발견하고 첨부 요강은 원문 확인 대상으로 표시합니다.
 
   - id: gyeongbuk_mungyeong
     name: 문경시파크골프협회
@@ -173,16 +192,23 @@ sources:
     name: 제주특별자치도 파크골프협회
     region: 제주
     category: provincial_association
-    mode: manual_required
-    url: https://jejupga.com/
+    mode: auto
+    collector: official_notice
+    url: https://jejupga.com/bbs/board.php?bo_table=event
+    list_urls:
+      - https://jejupga.com/bbs/board.php?bo_table=event
+    board_is_park_golf: true
+    detail_link_regex: "(?:[?&])wr_id="
     official: true
-    notes: 게시판 첨부 공고를 수동 확인합니다.
+    notes: 공식 대회 게시판의 공고 링크를 자동 발견하고 첨부 요강은 원문 확인 대상으로 표시합니다.
 
   - id: busan_sports_portal
     name: 부산시 생활체육포털 대회·행사 일정
     region: 부산
     category: provincial_sports_council
-    mode: manual_required
+    mode: auto
+    collector: busan_sports
     url: https://www.busan.go.kr/sports/main/19
+    api_url: https://www.busan.go.kr/sports/getCpttEvntListJson.do
     official: true
-    notes: 종목별 대회 일정과 참가 대상을 수동 확인합니다.
+    notes: 부산시 공개 JSON에서 파크골프 대회 일정과 참가 정보를 자동수집합니다.
