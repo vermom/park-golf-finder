@@ -5,6 +5,7 @@ import {
   canUseNativeInstallPrompt,
   detectInstallBrowser,
   resolveInstallDialogMode,
+  shouldAutoOpenInstallGuide,
 } from './pwa-install';
 
 describe('브라우저별 안전한 설치 안내', () => {
@@ -30,6 +31,14 @@ describe('브라우저별 안전한 설치 안내', () => {
     expect(resolveInstallDialogMode('android', false, true, true)).toBe('installed-help');
     expect(resolveInstallDialogMode('android', false, false, true)).toBe('manual');
     expect(resolveInstallDialogMode('samsung', true, true, true)).toBe('samsung');
+  });
+
+  it('처음 방문에는 자동 안내를 열지 않고 사용자가 설치를 시작한 경우만 이어서 연다', () => {
+    expect(shouldAutoOpenInstallGuide('android', false, false)).toBe(false);
+    expect(shouldAutoOpenInstallGuide('samsung', false, false)).toBe(false);
+    expect(shouldAutoOpenInstallGuide('android', false, true)).toBe(true);
+    expect(shouldAutoOpenInstallGuide('android', true, true)).toBe(false);
+    expect(shouldAutoOpenInstallGuide('other', false, true)).toBe(false);
   });
 
   it('Chrome 열기 주소는 공식 HTTPS 페이지만 전달하고 실패하면 안전하게 중단한다', () => {

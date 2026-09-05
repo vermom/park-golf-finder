@@ -30,6 +30,7 @@ describe('내 정보 선택창 호환성', () => {
     expect(source).toContain('휴대폰에 앱 설치');
     expect(source).toContain('이미 설치되어 있을 가능성이 커요');
     expect(source).toContain('아이콘을 길게 누르세요');
+    expect(source).not.toContain('INSTALL_GUIDE_SESSION_KEY');
   });
 
   it('대회 카드에 자동수집 출처 문구를 반복해서 표시하지 않는다', () => {

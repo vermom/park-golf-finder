@@ -13,6 +13,14 @@ export function canUseNativeInstallPrompt(browser: InstallBrowser) {
   return browser !== 'samsung';
 }
 
+export function shouldAutoOpenInstallGuide(
+  browser: InstallBrowser,
+  isInstalled: boolean,
+  installContinuation: boolean,
+) {
+  return browser !== 'other' && !isInstalled && installContinuation;
+}
+
 export function resolveInstallDialogMode(
   browser: InstallBrowser,
   hasPrompt: boolean,

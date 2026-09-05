@@ -66,6 +66,7 @@ import {
   canUseNativeInstallPrompt,
   detectInstallBrowser,
   resolveInstallDialogMode,
+  shouldAutoOpenInstallGuide,
   type InstallBrowser,
 } from '@/lib/pwa-install';
 
@@ -121,7 +122,6 @@ declare global {
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 const dataUrl = `${basePath}/data/events.json`;
 const STORAGE_KEY = 'park-golf-finder:v1';
-const INSTALL_GUIDE_SESSION_KEY = 'park-golf-finder:install-guide-shown';
 
 const emptyFilters: EventFilters = {
   query: '',
@@ -310,19 +310,12 @@ export default function Home() {
       const standalone = window.matchMedia('(display-mode: standalone)').matches
         || Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
       const browser = detectInstallBrowser(navigator.userAgent, navigator.maxTouchPoints);
-      const mobile = browser !== 'other';
       const installContinuation = new URLSearchParams(window.location.search).get('install') === '1';
       setIsInstalled(standalone);
       setInstallBrowser(browser);
       setChromeOpenUrl(browser === 'samsung' ? (buildChromeIntentUrl(window.location.href) ?? '') : '');
       setIsInstallContinuation(installContinuation);
-      if (standalone || !mobile) return;
-      try {
-        if (!installContinuation && sessionStorage.getItem(INSTALL_GUIDE_SESSION_KEY)) return;
-        sessionStorage.setItem(INSTALL_GUIDE_SESSION_KEY, '1');
-      } catch {
-        // 저장 기능이 막힌 브라우저에서도 설치 안내는 한 번 표시합니다.
-      }
+      if (!shouldAutoOpenInstallGuide(browser, standalone, installContinuation)) return;
       if (installContinuation) {
         const cleanUrl = new URL(window.location.href);
         cleanUrl.searchParams.delete('install');
