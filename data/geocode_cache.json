@@ -218,5 +218,11 @@
     "matched_address": "경남 창원시",
     "accuracy": "locality"
   },
-  "춘천 소양강파크골프장": false
+  "춘천 소양강파크골프장": false,
+  "인천 아시아드파크골프장": {
+    "latitude": 37.545185,
+    "longitude": 126.6651,
+    "matched_address": "아시아드파크(주)",
+    "accuracy": "locality"
+  }
 }
