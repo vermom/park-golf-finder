@@ -224,5 +224,11 @@
     "longitude": 126.6651,
     "matched_address": "아시아드파크(주)",
     "accuracy": "locality"
+  },
+  "충북 제천시 금성면 중전리": {
+    "latitude": 37.052698,
+    "longitude": 128.190071,
+    "matched_address": "충북 제천시 금성면 중전리",
+    "accuracy": "address"
   }
 }
