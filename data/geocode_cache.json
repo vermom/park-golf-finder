@@ -230,5 +230,11 @@
     "longitude": 128.190071,
     "matched_address": "충북 제천시 금성면 중전리",
     "accuracy": "address"
+  },
+  "경상남도 창원시 의창구 대산면 북부리 195-3": {
+    "latitude": 35.352577,
+    "longitude": 128.720688,
+    "matched_address": "경상남도 창원시 의창구 대산면 북부리 195-3",
+    "accuracy": "address"
   }
 }
