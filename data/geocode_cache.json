@@ -242,5 +242,11 @@
     "longitude": 127.19593,
     "matched_address": "전북 순창군 유등면 오교리 524-1",
     "accuracy": "address"
+  },
+  "정선군 정선읍 봉양리 37-3": {
+    "latitude": 37.383931,
+    "longitude": 128.668776,
+    "matched_address": "강원특별자치도 정선군 정선읍 봉양리 37-3",
+    "accuracy": "address"
   }
 }
