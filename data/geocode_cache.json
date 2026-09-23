@@ -248,5 +248,12 @@
     "longitude": 128.668776,
     "matched_address": "강원특별자치도 정선군 정선읍 봉양리 37-3",
     "accuracy": "address"
+  },
+  "남원시 그린파크골프장": false,
+  "경기도 양평군 강상면 교평리 419": {
+    "latitude": 37.485582,
+    "longitude": 127.485013,
+    "matched_address": "경기도 양평군 강상면 교평리 419",
+    "accuracy": "address"
   }
 }
