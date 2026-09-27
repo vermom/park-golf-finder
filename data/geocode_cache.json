@@ -256,5 +256,17 @@
     "matched_address": "경기도 양평군 강상면 교평리 419",
     "accuracy": "address"
   },
-  "화천산천어파크골프장 제1, 2구장": false
+  "화천산천어파크골프장 제1, 2구장": false,
+  "전북 남원시 요천로 1036-207": {
+    "latitude": 35.384708,
+    "longitude": 127.346705,
+    "matched_address": "전북 남원시 주생면 중동리 요천로 1036-207",
+    "accuracy": "address"
+  },
+  "전북순창군 유등면 오교리 524-1번지": {
+    "latitude": 35.372815,
+    "longitude": 127.19593,
+    "matched_address": "전북 순창군 유등면 오교리 524-1",
+    "accuracy": "address"
+  }
 }
