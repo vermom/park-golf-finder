@@ -419,7 +419,7 @@ export default function Home() {
   const regions = useMemo(() => [...new Set(allEvents.map((event) => event.region).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ko')), [allEvents]);
   const conflicts = useMemo(() => conflictsFor(allEvents, applied), [allEvents, applied]);
   const shownEvents = useMemo(() => {
-    const filtered = filterEvents(allEvents, filters, new Date(), profile.region).filter((event) => {
+    const filtered = filterEvents(allEvents, filters, new Date(), profile.region, viewMode === 'applied').filter((event) => {
       if (viewMode === 'favorites') return favorites.has(event.id);
       if (viewMode === 'applied') return applied.has(event.id);
       return true;
@@ -815,7 +815,7 @@ export default function Home() {
               내 지역만
             </label>
           </div>
-          <p className="mt-2 text-sm text-slate-500">정렬: {sort === 'event' ? '개최일 최신순' : '접수 마감일순'} · 모든 날짜는 한국시간 기준</p>
+          <p className="mt-2 text-sm text-slate-500">정렬: {sort === 'event' ? '개최일 최신순' : '접수 마감일순'} · 접수 마감·종료 대회는 기본 목록에서 숨김 · 모든 날짜는 한국시간 기준</p>
         </section>
 
         {data && data.notices.length > 0 && (

@@ -68,6 +68,19 @@ describe('검색·필터·정렬', () => {
     expect(filterEvents(events, { ...filters, nearbyOnly: true }, new Date('2026-09-04T09:00:00+09:00'), '경북').map((item) => item.id)).toEqual(['one']);
   });
 
+  it('기본 목록에서는 접수 마감과 종료 대회를 숨긴다', () => {
+    const closed = event({ id: 'closed' });
+    const ended = event({ id: 'ended', event_start: '2026-08-01', event_end: '2026-08-02' });
+    expect(filterEvents([closed, ended], filters, new Date('2026-09-11T09:00:00+09:00'))).toEqual([]);
+  });
+
+  it('접수 상태를 직접 선택하거나 신청 목록을 보면 마감 대회를 표시한다', () => {
+    const closed = event({ id: 'closed' });
+    const now = new Date('2026-09-11T09:00:00+09:00');
+    expect(filterEvents([closed], { ...filters, status: '접수 마감' }, now).map((item) => item.id)).toEqual(['closed']);
+    expect(filterEvents([closed], filters, now, '', true).map((item) => item.id)).toEqual(['closed']);
+  });
+
   it('같은 우선 지역에서는 개최일이 가장 최신인 대회를 먼저 정렬한다', () => {
     const nearbyEvents = [
       event({ id: 'early', event_start: '2026-09-20', event_end: '2026-09-20' }),

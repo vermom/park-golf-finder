@@ -92,11 +92,12 @@ export function computeStatus(event: Pick<EventItem, 'event_end' | 'registration
   return '접수 중';
 }
 
-export function filterEvents(events: EventItem[], filters: EventFilters, now = new Date(), homeRegion = '') {
+export function filterEvents(events: EventItem[], filters: EventFilters, now = new Date(), homeRegion = '', includeClosed = false) {
   const query = filters.query.trim().toLocaleLowerCase('ko');
   return events.filter((event) => {
     const status = computeStatus(event, now);
     const text = `${event.name} ${event.region} ${event.city ?? ''} ${event.venue}`.toLocaleLowerCase('ko');
+    if (!includeClosed && !filters.status && (status === '접수 마감' || status === '대회 종료')) return false;
     if (query && !text.includes(query)) return false;
     if (filters.region && event.region !== filters.region) return false;
     if (filters.status && status !== filters.status) return false;
