@@ -19,7 +19,7 @@ from collectors.busan import BusanSportsCollector  # noqa: E402
 from collectors.manual import load_manual_events  # noqa: E402
 from collectors.official_notice import OfficialNoticeCollector  # noqa: E402
 from scripts.geocoding import enrich_venue_locations  # noqa: E402
-from scripts.matching import match_notices  # noqa: E402
+from scripts.matching import canonical_name, match_notices  # noqa: E402
 from scripts.validation import domain_errors  # noqa: E402
 
 KST = ZoneInfo("Asia/Seoul")
@@ -31,6 +31,11 @@ def normalize_name(name: str) -> str:
     return re.sub(r"[^0-9a-z가-힣]", "", name.lower())
 
 
+def deduplication_name(name: str) -> str:
+    # 출처마다 연도를 쓰거나 회차를 쓰는 차이를 흡수한다.
+    return canonical_name(name) or normalize_name(name)
+
+
 def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     # 중앙 협회 일정은 지역이 비어 있는 반면 지역 협회 공고에는 지역이
     # 채워지는 경우가 있다. 이름과 시작일이 같고, 두 지역이 같거나 한쪽만
@@ -38,10 +43,10 @@ def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     # 이름과 날짜가 우연히 같아도 합치지 않는다.
     grouped: list[dict[str, Any]] = []
     for event in events:
-        normalized_name = normalize_name(event["name"])
+        normalized_name = deduplication_name(event["name"])
         current = next((
             candidate for candidate in grouped
-            if normalize_name(candidate["name"]) == normalized_name
+            if deduplication_name(candidate["name"]) == normalized_name
             and candidate["event_start"] == event["event_start"]
             and (
                 candidate.get("region") == event.get("region")

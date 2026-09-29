@@ -9,6 +9,7 @@ from urllib.parse import urljoin, urlparse
 import requests
 
 from .pdf_extract import extract_pdf_text
+from .hwp_extract import extract_hwp_text
 
 
 DATE_TOKEN = re.compile(r"(20\d{2})\s*(?:년|[./-])\s*(\d{1,2})\s*(?:월|[./-])\s*(\d{1,2})")
@@ -142,6 +143,28 @@ def _expand(spans: list[tuple[date, date]]) -> list[str]:
     return values
 
 
+def registration_deadline(text: str) -> str | None:
+    anchors = re.compile(
+        r"등록\s*\(접수\)\s*기한|참가\s*신청\s*(?:기간|기한)|"
+        r"(?:시\s*,?\s*군별\s*)?신청\s*기간|접수\s*(?:기간|기한)"
+    )
+    for anchor in anchors.finditer(text):
+        zone = re.sub(r"\s+", "", text[anchor.end():anchor.end() + 220])
+        match = DATE_TOKEN.search(zone)
+        if not match:
+            continue
+        tail = zone[match.end():match.end() + 32]
+        if "까지" not in tail:
+            continue
+        deadline = _safe_date(int(match.group(1)), int(match.group(2)), int(match.group(3)))
+        if not deadline:
+            continue
+        time_match = re.search(r"(?:일)?(?:\([월화수목금토일]\))?(\d{1,2}):([0-5]\d)\s*까지", tail)
+        deadline_time = f"{int(time_match.group(1)):02d}:{time_match.group(2)}:00" if time_match else "23:59:59"
+        return f"{deadline.isoformat()}T{deadline_time}+09:00"
+    return None
+
+
 def _region(title: str, venue: str, fallback: str) -> str:
     text = title if venue == "경기장 확인 필요" else f"{title} {venue}"
     for region, hints in REGIONS.items():
@@ -184,6 +207,10 @@ def fetch_notice_detail(session: requests.Session, notice: dict[str, Any], mode:
         pdf = next((item for item in attachments if item["type"] == "pdf"), None)
         if pdf:
             text = f"{text}\n{extract_pdf_text(session, pdf['url'])}"
+    if mode == "gnuboard_html":
+        hwp = next((item for item in attachments if item["type"] in {"hwp", "hwpx"}), None)
+        if hwp:
+            text = f"{text}\n{extract_hwp_text(session, hwp['url'])}"
 
     announcement_date = None
     posted = re.search(r"등록일\s*(\d{2,4})[.-](\d{1,2})[.-](\d{1,2})", text)
@@ -272,15 +299,13 @@ def event_from_notice(notice: dict[str, Any], detail: dict[str, Any], mode: str)
     if re.search(r"단체전", text):
         competition_type.append("단체전")
 
-    registration_end = None
-    registration_zone = "" if mode == "title" else _segment(text, [r"참가\s*신청"], [r"기타\s*사항", r"경기\s*일정"], 1000)
-    for match in DATE_TOKEN.finditer(re.sub(r"\s+", "", registration_zone)):
-        if "까지" not in re.sub(r"\s+", "", registration_zone)[match.end():match.end() + 12]:
-            continue
-        deadline = _safe_date(int(match.group(1)), int(match.group(2)), int(match.group(3)))
-        if deadline:
-            registration_end = f"{deadline.isoformat()}T23:59:59+09:00"
-        break
+    registration_end = None if mode == "title" else registration_deadline(text)
+    registration_zone = "" if mode == "title" else _segment(
+        text,
+        [r"접수\s*및\s*대상자", r"선수\s*등록\s*\(접수\)", r"참가\s*신청(?!서)"],
+        [r"기타\s*사항", r"경기\s*일정"],
+        1400,
+    )
 
     registration_type = "접수 단위 확인 필요"
     if re.search(r"시군협회|시협회\s*공문|소속\s*협회", registration_zone):

@@ -47,3 +47,12 @@ def test_keeps_same_name_and_date_when_regions_conflict():
     })
 
     assert len(deduplicate([gyeongbuk, gyeongnam])) == 2
+
+
+def test_merges_year_and_round_title_variants_for_same_event():
+    schedule = _event("schedule", "경남")
+    schedule["name"] = "2026 문화체육관광부장관기 전국파크골프대회"
+    official = _event("official", "경남")
+    official["name"] = "제4회 문화체육관광부장관기 전국 파크골프대회"
+
+    assert len(deduplicate([schedule, official])) == 1

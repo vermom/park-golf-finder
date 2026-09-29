@@ -1,4 +1,4 @@
-from collectors.notice_detail import date_spans, event_from_notice
+from collectors.notice_detail import date_spans, event_from_notice, registration_deadline
 
 
 NOTICE = {
@@ -45,3 +45,29 @@ def test_promotes_html_notice_to_event_card():
 
 def test_malformed_notice_without_event_date_stays_for_review():
     assert event_from_notice(NOTICE, {"text": "대회 날짜는 추후 공지", "attachments": []}, "gnuboard_html") is None
+
+
+def test_extracts_registration_deadline_and_time_from_notice_text():
+    detail = {
+        "text": """
+        대 회 명 : 정선가리왕산배 파크골프대회
+        기 간 : 2026년 11월 8일
+        장 소 : 정선군 녹송파크골프장
+        참가신청 : 시군별 협회 일괄신청
+        신청기간 : 2026년 10월 16일(금) 18:00까지
+        경기 일정 : 당일 안내
+        """,
+        "attachments": [],
+        "announcement_date": "2026-09-22",
+    }
+    event = event_from_notice(NOTICE, detail, "gnuboard_html")
+    assert event is not None
+    assert event["registration_end"] == "2026-10-16T18:00:00+09:00"
+
+
+def test_registration_deadline_ignores_membership_cutoff_date():
+    text = """
+    참가 자격은 2026년 7월 31일까지 협회에 등록된 회원
+    등록(접수) 기한: 2026년 9월 16일(수) 18:00까지 참가신청서 제출
+    """
+    assert registration_deadline(text) == "2026-09-16T18:00:00+09:00"

@@ -92,6 +92,14 @@ export function computeStatus(event: Pick<EventItem, 'event_end' | 'registration
   return '접수 중';
 }
 
+export function removeClosedFavorites(events: EventItem[], favoriteIds: Set<string>, now = new Date()) {
+  const byId = new Map(events.map((event) => [event.id, event]));
+  return new Set([...favoriteIds].filter((id) => {
+    const event = byId.get(id);
+    return event && !['접수 마감', '대회 종료'].includes(computeStatus(event, now));
+  }));
+}
+
 export function filterEvents(events: EventItem[], filters: EventFilters, now = new Date(), homeRegion = '', includeClosed = false) {
   const query = filters.query.trim().toLocaleLowerCase('ko');
   return events.filter((event) => {

@@ -39,6 +39,11 @@ describe('내 정보 선택창 호환성', () => {
     expect(source).not.toContain('event.trust_status');
   });
 
+  it('접수가 끝난 카드의 접수 버튼은 접수 마감으로 표시한다', () => {
+    const source = readFileSync(new URL('./page.tsx', import.meta.url), 'utf8');
+    expect(source).toContain("status === '접수 마감' || status === '대회 종료' ? '접수 마감' : '접수처 확인 필요'");
+  });
+
   it('세부 해석이 남은 공식 공고를 별도로 보여준다', () => {
     const source = readFileSync(new URL('./page.tsx', import.meta.url), 'utf8');
     expect(source).toContain('다른 공식기관 새 공고');

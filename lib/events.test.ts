@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { computeStatus, conflictsFor, filterEvents, sortEvents, type EventFilters, type EventItem } from './events';
+import { computeStatus, conflictsFor, filterEvents, removeClosedFavorites, sortEvents, type EventFilters, type EventItem } from './events';
 
 const event = (overrides: Partial<EventItem> = {}): EventItem => ({
   id: 'one',
@@ -50,6 +50,12 @@ describe('대회 상태', () => {
 
   it('대회 종료일이 지난 경우 대회 종료로 계산한다', () => {
     expect(computeStatus(event(), new Date('2026-10-12T09:00:00+09:00'))).toBe('대회 종료');
+  });
+
+  it('접수 마감된 관심 대회는 자동으로 정리한다', () => {
+    const open = event({ id: 'open', registration_end: '2026-09-20T18:00:00+09:00' });
+    const closed = event({ id: 'closed', registration_end: '2026-09-10T18:00:00+09:00' });
+    expect([...removeClosedFavorites([open, closed], new Set(['open', 'closed']), new Date('2026-09-11T09:00:00+09:00'))]).toEqual(['open']);
   });
 });
 

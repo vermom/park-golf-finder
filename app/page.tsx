@@ -46,6 +46,7 @@ import {
   conflictsFor,
   filterEvents,
   isHomeRegion,
+  removeClosedFavorites,
   sortEvents,
   type EventFilters,
   type EventItem,
@@ -312,8 +313,9 @@ export default function Home() {
 
   useEffect(() => {
     if (!storageReady) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ favorites: [...favorites], applied: [...applied], profile }));
-  }, [favorites, applied, profile, storageReady]);
+    const savedFavorites = data ? removeClosedFavorites(data.events, favorites) : favorites;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ favorites: [...savedFavorites], applied: [...applied], profile }));
+  }, [favorites, applied, profile, storageReady, data]);
 
   useEffect(() => {
     let installGuideTimer: number | undefined;
@@ -416,16 +418,17 @@ export default function Home() {
   }, [data]);
 
   const allEvents = useMemo(() => data?.events ?? [], [data]);
+  const activeFavorites = useMemo(() => removeClosedFavorites(allEvents, favorites), [allEvents, favorites]);
   const regions = useMemo(() => [...new Set(allEvents.map((event) => event.region).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ko')), [allEvents]);
   const conflicts = useMemo(() => conflictsFor(allEvents, applied), [allEvents, applied]);
   const shownEvents = useMemo(() => {
     const filtered = filterEvents(allEvents, filters, new Date(), profile.region, viewMode === 'applied').filter((event) => {
-      if (viewMode === 'favorites') return favorites.has(event.id);
+      if (viewMode === 'favorites') return activeFavorites.has(event.id);
       if (viewMode === 'applied') return applied.has(event.id);
       return true;
     });
     return sortEvents(filtered, sort, profile.region);
-  }, [allEvents, filters, sort, viewMode, favorites, applied, profile.region]);
+  }, [allEvents, filters, sort, viewMode, activeFavorites, applied, profile.region]);
   const shownNotices = useMemo(() => {
     const query = filters.query.trim().toLocaleLowerCase('ko');
     return (data?.notices ?? []).filter((notice) => {
@@ -752,7 +755,7 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-4 pb-16 pt-5 sm:px-6">
         <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div className="summary-tile summary-primary"><span>접수 가능</span><strong>{data ? `${openCount}개` : '—'}</strong></div>
-          <div className="summary-tile"><span>관심 대회</span><strong>{favorites.size}개</strong></div>
+          <div className="summary-tile"><span>관심 대회</span><strong>{activeFavorites.size}개</strong></div>
           <div className="summary-tile"><span>신청 완료</span><strong>{applied.size}개</strong></div>
           <div className="summary-tile"><span>확인 남은 공고</span><strong>{data ? `${data.meta.notice_count}개` : '—'}</strong></div>
         </div>
@@ -863,7 +866,7 @@ export default function Home() {
           <Tabs className="w-full min-w-0 sm:w-auto" value={viewMode} onValueChange={(value) => setViewMode(value as ViewMode)}>
             <TabsList className="grid h-12 w-full grid-cols-3 rounded-xl bg-emerald-100 p-1 sm:flex sm:w-auto">
               <TabsTrigger className="min-w-0 px-2 text-base font-bold sm:px-4" value="all">전체</TabsTrigger>
-              <TabsTrigger className="min-w-0 px-2 text-base font-bold sm:px-4" value="favorites">관심 {favorites.size}</TabsTrigger>
+              <TabsTrigger className="min-w-0 px-2 text-base font-bold sm:px-4" value="favorites">관심 {activeFavorites.size}</TabsTrigger>
               <TabsTrigger className="min-w-0 px-2 text-base font-bold sm:px-4" value="applied">신청 {applied.size}</TabsTrigger>
             </TabsList>
           </Tabs>
@@ -904,7 +907,7 @@ export default function Home() {
             {shownEvents.map((event) => {
               const status = computeStatus(event);
               const eventConflicts = conflicts.get(event.id) ?? [];
-              const favorite = favorites.has(event.id);
+              const favorite = activeFavorites.has(event.id);
               const isApplied = applied.has(event.id);
               const destination = event.venue_location;
               const routeKey = destination ? `${destination.latitude},${destination.longitude}` : '';
@@ -977,12 +980,12 @@ export default function Home() {
                       <Button variant={isApplied ? 'default' : 'outline'} size="lg" className="h-13 rounded-xl text-base font-black" aria-pressed={isApplied} onClick={() => toggle(setApplied, event.id)}>
                         {isApplied ? <CheckCircle2 aria-hidden="true" /> : <Check aria-hidden="true" />}{isApplied ? '신청 완료됨' : '신청 완료 표시'}
                       </Button>
-                      {event.registration_url ? (
+                      {event.registration_url && status !== '접수 마감' && status !== '대회 종료' ? (
                         <a href={event.registration_url} target="_blank" rel="noreferrer" className={buttonVariants({ size: 'lg', className: 'h-13 rounded-xl bg-emerald-700 text-base font-black text-white hover:bg-emerald-800' })}>
                           접수 페이지 <ExternalLink aria-hidden="true" />
                         </a>
                       ) : (
-                        <Button size="lg" className="h-13 rounded-xl text-base" disabled>접수처 확인 필요</Button>
+                        <Button size="lg" className="h-13 rounded-xl text-base" disabled>{status === '접수 마감' || status === '대회 종료' ? '접수 마감' : '접수처 확인 필요'}</Button>
                       )}
                     </div>
 
