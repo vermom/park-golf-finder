@@ -32,12 +32,25 @@ def normalize_name(name: str) -> str:
 
 
 def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    grouped: dict[tuple[str, str, str], dict[str, Any]] = {}
+    # 중앙 협회 일정은 지역이 비어 있는 반면 지역 협회 공고에는 지역이
+    # 채워지는 경우가 있다. 이름과 시작일이 같고, 두 지역이 같거나 한쪽만
+    # 비어 있을 때는 같은 대회로 본다. 서로 다른 지역이 명시된 대회는
+    # 이름과 날짜가 우연히 같아도 합치지 않는다.
+    grouped: list[dict[str, Any]] = []
     for event in events:
-        key = (normalize_name(event["name"]), event["region"], event["event_start"])
-        current = grouped.get(key)
+        normalized_name = normalize_name(event["name"])
+        current = next((
+            candidate for candidate in grouped
+            if normalize_name(candidate["name"]) == normalized_name
+            and candidate["event_start"] == event["event_start"]
+            and (
+                candidate.get("region") == event.get("region")
+                or not candidate.get("region")
+                or not event.get("region")
+            )
+        ), None)
         if current is None:
-            grouped[key] = event
+            grouped.append(event)
             continue
         preferred, secondary = (event, current) if event["source_type"] == "자동수집" and current["source_type"] != "자동수집" else (current, event)
         for field, value in secondary.items():
@@ -59,8 +72,8 @@ def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     "url": secondary["announcement_url"],
                     "source_name": secondary["source_name"],
                 })
-        grouped[key] = preferred
-    return sorted(grouped.values(), key=lambda event: (event["event_start"], event["name"]))
+        grouped[grouped.index(current)] = preferred
+    return sorted(grouped, key=lambda event: (event["event_start"], event["name"]))
 
 
 def deduplicate_notices(notices: list[dict[str, Any]], events: list[dict[str, Any]]) -> list[dict[str, Any]]:
