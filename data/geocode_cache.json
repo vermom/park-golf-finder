@@ -268,5 +268,11 @@
     "longitude": 127.19593,
     "matched_address": "전북 순창군 유등면 오교리 524-1",
     "accuracy": "address"
+  },
+  "경상남도 양산시 물금읍 황산공원1길 101": {
+    "latitude": 35.298252,
+    "longitude": 128.997004,
+    "matched_address": "경상남도 양산시 물금읍 증산리 황산공원1길 101",
+    "accuracy": "address"
   }
 }
