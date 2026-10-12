@@ -274,5 +274,11 @@
     "longitude": 128.997004,
     "matched_address": "경상남도 양산시 물금읍 증산리 황산공원1길 101",
     "accuracy": "address"
+  },
+  "대구광역시 수성구 고모동 6-2번지": {
+    "latitude": 35.872135,
+    "longitude": 128.668558,
+    "matched_address": "대구광역시 수성구 고모동 6-2",
+    "accuracy": "address"
   }
 }
