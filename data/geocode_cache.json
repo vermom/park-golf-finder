@@ -286,5 +286,11 @@
     "longitude": 127.62951,
     "matched_address": "경기 여주시 현암동 강변북로 241",
     "accuracy": "address"
+  },
+  "전남광주통합특별 함평군 함평읍 곤재로 83": {
+    "latitude": 35.051102,
+    "longitude": 126.518791,
+    "matched_address": "전남광주 함평군 함평읍 수호리 곤재로 83",
+    "accuracy": "address"
   }
 }
