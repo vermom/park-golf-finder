@@ -292,5 +292,11 @@
     "longitude": 126.518791,
     "matched_address": "전남광주 함평군 함평읍 수호리 곤재로 83",
     "accuracy": "address"
+  },
+  "대구광역시 군위군 의흥면 이지리 산117번지": {
+    "latitude": 36.158123,
+    "longitude": 128.699145,
+    "matched_address": "대구광역시 군위군 의흥면 이지리 산117",
+    "accuracy": "address"
   }
 }
